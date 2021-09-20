@@ -1,0 +1,14 @@
+citHeader("To cite multid in publications use:")
+
+citEntry(entry = "Manual",
+  title        = "multid: Multivariate Difference between Two Groups",
+  author       = personList(as.person("Ville-Juhani Ilmarinen")),
+  url          = "https://CRAN.R-project.org/package=multid",
+  year         = "2021",
+  note         = sprintf("R package version %s", meta$Version),
+
+  textVersion  =
+  paste("Ilmarinen, V. J. (2021).",
+        "multid: Multivariate Difference between Two Groups.",
+        "https://CRAN.R-project.org/package=multid")
+)
