@@ -16,6 +16,25 @@ large number of correlated variables in the multivariate set while
 providing k-fold cross-validation and regularization to avoid
 overfitting.
 
+Predictive approach as implemented with regularized methods also allows
+for examination of group-membership probabilities and their
+distributions across individuals. In the context of statistical
+predictions of sex, these distributions are an updated variant to
+gender-typicality distributions used in gender diagnosticity methodology
+[(Lippa & Connelly, 1990)](https://doi.org/10.1037/0022-3514.59.5.1051).
+
+Studies in which these methods have been used:
+
+1.  [Lönnqvist & Ilmarinen (2021). Using a Continuous Measure of
+    Genderedness to Assess Sex Differences in the Attitudes of the
+    Political Elite. Political
+    Behavior.](https://doi.org/10.1007/s11109-021-09681-2)
+2.  [Ilmarinen et al. (2021). Is There a g-factor of Genderedness? Using
+    a Continuous Measure of Genderedness to Assess Sex Differences in
+    Personality, Values, Cognitive Ability, School Grades, and
+    Educational Track. Manuscript in
+    review.](https://doi.org/10.31234/osf.io/j59bs)
+
 ## Installation
 
 You can install the released version of multid from
@@ -33,19 +52,20 @@ You can install the development version from
 devtools::install_github("vjilmari/multid")
 ```
 
-## Example
+## Examples
 
-This is a basic example which shows you how to measure standardized
-multivariate (both Sepal and Petal dimensions, four variables in total)
-distance between setosa and versicolor Species in iris dataset. Similar
-example is provided with artificially generated multi group data which
-are used as separate data folds in the procedure.
+### Single sample with two groups
+
+This example shows how to measure standardized multivariate (both Sepal
+and Petal dimensions, four variables in total) distance between setosa
+and versicolor Species in iris dataset.
 
 ``` r
 library(multid)
 set.seed(91237)
 
-D_regularized(
+D.iris<-
+  D_regularized(
   data = iris[iris$Species == "setosa" | iris$Species == "versicolor", ],
   mv.vars = c(
     "Sepal.Length", "Sepal.Width",
@@ -53,13 +73,16 @@ D_regularized(
   ),
   group.var = "Species",
   group.values = c("setosa", "versicolor")
-)$D
+)
+
+round(D.iris$D,2)
 #>      n.setosa n.versicolor m.setosa m.versicolor sd.setosa sd.versicolor
-#> [1,]       50           50 8.348364       -9.379  1.386586      2.247504
-#>      pooled.sd     diff        D
-#> [1,]  1.867337 17.72736 9.493393
+#> [1,]       50           50     8.35        -9.38      1.39          2.25
+#>      pooled.sd  diff    D
+#> [1,]      1.87 17.73 9.49
 # Use different partitions of data for regularization and estimation
-D_regularized(
+D.iris_out<-
+  D_regularized(
   data = iris[iris$Species == "setosa" |
     iris$Species == "versicolor", ],
   mv.vars = c(
@@ -69,15 +92,33 @@ D_regularized(
   group.var = "Species",
   group.values = c("setosa", "versicolor"),
   size = 35,
-  out = TRUE
-)$D
-#>      n.setosa n.versicolor m.setosa m.versicolor sd.setosa sd.versicolor
-#> [1,]       15           15 7.614128    -8.973335   1.79109      2.353035
-#>      pooled.sd     diff        D
-#> [1,]  2.091026 16.58746 7.932692
-# multigroup model where the group variable is defined as fold.var, and output is produced separately for each group/fold. Groups are also used as folds in the k-fold cross-validation procedure.
+  out = TRUE,
+  pred.prob = TRUE,
+  prob.cutoffs = seq(0,1,0.25)
+  
+)
 
-# separate sample folds
+# print group differences (D)
+round(D.iris_out$D,2)
+#>      n.setosa n.versicolor m.setosa m.versicolor sd.setosa sd.versicolor
+#> [1,]       15           15     7.61        -8.97      1.79          2.35
+#>      pooled.sd  diff    D
+#> [1,]      2.09 16.59 7.93
+# print table of predicted probabilities
+D.iris_out$P.table
+#>             
+#>              [0,0.25) [0.25,0.5) [0.5,0.75) [0.75,1]
+#>   setosa            0          0          0        1
+#>   versicolor        1          0          0        0
+```
+
+### Multiple samples with two groups in each
+
+This example first generates artificial multi-group data which are then
+used as separate data folds in the regularization procedure following
+separate predictions made for each fold.
+
+``` r
 # generate data for 10 groups
 set.seed(34246)
 n1 <- 100
@@ -92,7 +133,7 @@ d <-
   )
 #'
 # Fit and predict with same data
-D_regularized(
+round(D_regularized(
   data = d,
   mv.vars = c("x1", "x2", "x3"),
   group.var = "sex",
@@ -100,32 +141,36 @@ D_regularized(
   fold.var = "fold",
   fold = TRUE,
   rename.output = TRUE
-)$D
-#>   n.1 n.2           m.1          m.2       sd.1       sd.2  pooled.sd
-#> A  53  48  0.0147710988 -0.022086654 0.07263555 0.06499505 0.06911364
-#> B  56  53 -0.0019900692 -0.019396118 0.07002969 0.05978853 0.06525374
-#> C  39  56 -0.0214165020 -0.008847558 0.07734223 0.06494597 0.07027580
-#> D  53  58 -0.0008188678 -0.011421247 0.06352770 0.06461516 0.06409867
-#> E  44  52 -0.0030891361  0.005871956 0.06004801 0.06733488 0.06410440
-#> F  60  31 -0.0123361550 -0.005902017 0.06477705 0.06218219 0.06391415
-#> G  56  51 -0.0137985663 -0.025847991 0.06259123 0.05462635 0.05893284
-#> H  47  51 -0.0040611163 -0.014056292 0.06945851 0.07320530 0.07143449
-#> I  42  45  0.0176532701 -0.014835959 0.07031247 0.06559995 0.06791388
-#> J  48  57 -0.0049288771 -0.011236030 0.05491690 0.06776115 0.06222991
-#>           diff          D pooled.sd.1 pooled.sd.2 pooled.sd.total  d.sd.total
-#> A  0.036857753  0.5332921  0.06661768   0.0647895      0.06570629  0.56094714
-#> B  0.017406049  0.2667441  0.06661768   0.0647895      0.06570629  0.26490690
-#> C -0.012568944 -0.1788517  0.06661768   0.0647895      0.06570629 -0.19128983
-#> D  0.010602379  0.1654072  0.06661768   0.0647895      0.06570629  0.16136020
-#> E -0.008961092 -0.1397890  0.06661768   0.0647895      0.06570629 -0.13638105
-#> F -0.006434138 -0.1006685  0.06661768   0.0647895      0.06570629 -0.09792272
-#> G  0.012049425  0.2044603  0.06661768   0.0647895      0.06570629  0.18338313
-#> H  0.009995176  0.1399209  0.06661768   0.0647895      0.06570629  0.15211902
-#> I  0.032489229  0.4783886  0.06661768   0.0647895      0.06570629  0.49446151
-#> J  0.006307153  0.1013524  0.06661768   0.0647895      0.06570629  0.09599010
+)$D,2)
+#>   n.female n.male m.female m.male sd.female sd.male pooled.sd  diff     D
+#> A       53     48     0.01  -0.02      0.07    0.06      0.07  0.04  0.53
+#> B       56     53     0.00  -0.02      0.07    0.06      0.07  0.02  0.27
+#> C       39     56    -0.02  -0.01      0.08    0.06      0.07 -0.01 -0.18
+#> D       53     58     0.00  -0.01      0.06    0.06      0.06  0.01  0.17
+#> E       44     52     0.00   0.01      0.06    0.07      0.06 -0.01 -0.14
+#> F       60     31    -0.01  -0.01      0.06    0.06      0.06 -0.01 -0.10
+#> G       56     51    -0.01  -0.03      0.06    0.05      0.06  0.01  0.20
+#> H       47     51     0.00  -0.01      0.07    0.07      0.07  0.01  0.14
+#> I       42     45     0.02  -0.01      0.07    0.07      0.07  0.03  0.48
+#> J       48     57     0.00  -0.01      0.05    0.07      0.06  0.01  0.10
+#>   pooled.sd.female pooled.sd.male pooled.sd.total d.sd.total
+#> A             0.07           0.06            0.07       0.56
+#> B             0.07           0.06            0.07       0.26
+#> C             0.07           0.06            0.07      -0.19
+#> D             0.07           0.06            0.07       0.16
+#> E             0.07           0.06            0.07      -0.14
+#> F             0.07           0.06            0.07      -0.10
+#> G             0.07           0.06            0.07       0.18
+#> H             0.07           0.06            0.07       0.15
+#> I             0.07           0.06            0.07       0.49
+#> J             0.07           0.06            0.07       0.10
 #'
-# Different partitions for regularization and estimation for each data fold
-D_regularized(
+
+# Different partitions for regularization and estimation for each data fold.
+
+# Request probabilities of correct classification (pcc) and area under the receiver operating characteristics (auc) for the output.
+
+round(D_regularized(
   data = d,
   mv.vars = c("x1", "x2", "x3"),
   group.var = "sex",
@@ -134,39 +179,303 @@ D_regularized(
   size = 17,
   out = TRUE,
   fold = TRUE,
-  rename.output = TRUE
-)$D
-#>   n.1 n.2           m.1           m.2      sd.1      sd.2 pooled.sd
-#> A  36  31 -0.0008117477 -0.0054231327 0.1783541 0.1495396 0.1656790
-#> B  39  36 -0.0447770702 -0.0388386735 0.1615780 0.1473451 0.1549173
-#> C  22  39 -0.0676320635  0.0135231815 0.1691657 0.1297412 0.1450075
-#> D  36  41  0.0076243457  0.0088113020 0.1375257 0.1663247 0.1535588
-#> E  27  35 -0.0719427999  0.0008396515 0.1315043 0.1126188 0.1211645
-#> F  43  14 -0.0426691993  0.0379265035 0.1718121 0.1678070 0.1708739
-#> G  39  34 -0.0297091831 -0.0394578004 0.1233644 0.1497425 0.1362613
-#> H  30  34  0.0376714002  0.0090690130 0.1629470 0.1540525 0.1582751
-#> I  25  28  0.0182168066 -0.0295980682 0.1372502 0.1361344 0.1366606
-#> J  31  40  0.0042322250  0.0005736008 0.1539483 0.1513596 0.1524905
-#>           diff            D pooled.sd.1 pooled.sd.2 pooled.sd.total
-#> A  0.004611385  0.027833254   0.1542809   0.1462916       0.1503151
-#> B -0.005938397 -0.038332698   0.1542809   0.1462916       0.1503151
-#> C -0.081155245 -0.559662487   0.1542809   0.1462916       0.1503151
-#> D -0.001186956 -0.007729654   0.1542809   0.1462916       0.1503151
-#> E -0.072782451 -0.600691247   0.1542809   0.1462916       0.1503151
-#> F -0.080595703 -0.471667611   0.1542809   0.1462916       0.1503151
-#> G  0.009748617  0.071543569   0.1542809   0.1462916       0.1503151
-#> H  0.028602387  0.180713173   0.1542809   0.1462916       0.1503151
-#> I  0.047814875  0.349880403   0.1542809   0.1462916       0.1503151
-#> J  0.003658624  0.023992473   0.1542809   0.1462916       0.1503151
-#>     d.sd.total
-#> A  0.030678130
-#> B -0.039506332
-#> C -0.539900950
-#> D -0.007896456
-#> E -0.484199322
-#> F -0.536178487
-#> G  0.064854561
-#> H  0.190282908
-#> I  0.318097694
-#> J  0.024339704
+  rename.output = TRUE,
+  pcc = TRUE,
+  auc = TRUE
+)$D,2)
+#>   n.female n.male m.female m.male sd.female sd.male pooled.sd  diff     D
+#> A       36     31     0.00  -0.01      0.18    0.15      0.17  0.00  0.03
+#> B       39     36    -0.04  -0.04      0.16    0.15      0.15 -0.01 -0.04
+#> C       22     39    -0.07   0.01      0.17    0.13      0.15 -0.08 -0.56
+#> D       36     41     0.01   0.01      0.14    0.17      0.15  0.00 -0.01
+#> E       27     35    -0.07   0.00      0.13    0.11      0.12 -0.07 -0.60
+#> F       43     14    -0.04   0.04      0.17    0.17      0.17 -0.08 -0.47
+#> G       39     34    -0.03  -0.04      0.12    0.15      0.14  0.01  0.07
+#> H       30     34     0.04   0.01      0.16    0.15      0.16  0.03  0.18
+#> I       25     28     0.02  -0.03      0.14    0.14      0.14  0.05  0.35
+#> J       31     40     0.00   0.00      0.15    0.15      0.15  0.00  0.02
+#>   pcc.female pcc.male pcc.total  auc pooled.sd.female pooled.sd.male
+#> A       0.56     0.39      0.48 0.49             0.15           0.15
+#> B       0.36     0.61      0.48 0.50             0.15           0.15
+#> C       0.32     0.46      0.41 0.34             0.15           0.15
+#> D       0.53     0.49      0.51 0.49             0.15           0.15
+#> E       0.37     0.49      0.44 0.37             0.15           0.15
+#> F       0.44     0.36      0.42 0.39             0.15           0.15
+#> G       0.38     0.59      0.48 0.53             0.15           0.15
+#> H       0.73     0.47      0.59 0.57             0.15           0.15
+#> I       0.48     0.64      0.57 0.60             0.15           0.15
+#> J       0.55     0.45      0.49 0.52             0.15           0.15
+#>   pooled.sd.total d.sd.total
+#> A            0.15       0.03
+#> B            0.15      -0.04
+#> C            0.15      -0.54
+#> D            0.15      -0.01
+#> E            0.15      -0.48
+#> F            0.15      -0.54
+#> G            0.15       0.06
+#> H            0.15       0.19
+#> I            0.15       0.32
+#> J            0.15       0.02
+```
+
+### Comparison of Mahalanobis’ D and Regularized D when Difference in Population Exists
+
+This example compares a measure of standardized distance between group
+centroids (Mahalanobis’ D) and a regularized variant provided in the
+multid-package in small-sample scenario when the distance between group
+centroids in the population is D = 1.
+
+``` r
+set.seed(8327482)
+# generate data from sixteen correlated (r = .20) variables each with d = .50 difference (equals to Mahalanobis' D = 1)
+k=16
+r=0.2
+d=0.5
+n=200
+
+# population correlation matrix
+cor_mat<-matrix(ncol=k,nrow=k,rep(r,k*k))
+diag(cor_mat)<-1
+
+# population difference vector
+d_vector<-rep(d,k)
+
+# population Mahalanobis' D is exactly 1
+
+sqrt(t(d_vector) %*% solve(cor_mat) %*% d_vector)
+#>      [,1]
+#> [1,]    1
+# generate data
+library(MASS)
+
+male.dat<-
+  data.frame(sex="male",
+             mvrnorm(n = n/2,
+                     mu = 0.5*d_vector,
+                     Sigma = cor_mat,empirical = F))
+
+female.dat<-
+  data.frame(sex="female",
+             mvrnorm(n = n/2,
+                     mu = -0.5*d_vector,
+                     Sigma = cor_mat,empirical = F))
+
+dat<-rbind(male.dat,female.dat)
+
+# sample Mahalanobis' D
+
+# obtain mean differences
+
+d_vector_sample<-rep(NA,k)
+
+for (i in 1:k){
+  d_vector_sample[i]<-mean(male.dat[,i+1]-female.dat[,i+1])
+  
+}
+
+# sample pooled covariance matrix (use mean, because equal sample sizes)
+
+cov_mat_sample<-
+  (cov(male.dat[,2:17])+cov(female.dat[,2:17]))/2
+
+# calculate sample Mahalanobis' D
+sqrt(t(d_vector_sample) %*% solve(cov_mat_sample) %*% d_vector_sample)
+#>          [,1]
+#> [1,] 1.265318
+# calculate elastic net D
+
+D.ela<-
+  D_regularized(data=dat,
+              mv.vars=paste0("X",1:k),
+              group.var = "sex",
+              group.values = c("male","female"))
+
+round(D.ela$D,2)
+#>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff    D
+#> [1,]    100      100   0.54    -0.52    0.86      0.88      0.87 1.06 1.22
+# use separate data for regularization and estimation
+
+D.ela_out<-D_regularized(data=dat,
+              mv.vars=paste0("X",1:k),
+              group.var = "sex",
+              group.values = c("male","female"),
+              out=T,size = 50,pcc = T, auc=T,pred.prob = T)
+
+round(D.ela_out$D,2)
+#>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff    D
+#> [1,]     50       50   0.55    -0.33    1.04      0.92      0.99 0.88 0.89
+#>      pcc.male pcc.female pcc.total  auc
+#> [1,]     0.68       0.68      0.68 0.73
+# Table of predicted probabilites
+D.ela_out$P.table
+#>         
+#>          [0,0.2) [0.2,0.4) [0.4,0.6) [0.6,0.8) [0.8,1]
+#>   female    0.10      0.34      0.32      0.20    0.04
+#>   male      0.00      0.18      0.26      0.36    0.20
+```
+
+### Comparison of Mahalanobis’ D and Regularized D when Sex Difference in Population Does Not Exist
+
+This example compares a measure of standardized distance between group
+centroids (Mahalanobis’ D) and a regularized variant provided in the
+multid-package in small-sample scenario when the group centroids in the
+population is are at the same location, D = 0. In this sample,
+Mahalanobis’ D is measured at D = 0.5, elastic net D with same data used
+for regularization and estimation at D = 0.35, whereas elastic net D
+with independent estimation data shows D = 0.
+
+``` r
+set.seed(8327482)
+# generate data from sixteen correlated (r = .20) variables each with d = .00 difference (equals to Mahalanobis' D = 0)
+k=16
+r=0.2
+d=0.0
+n=200
+
+# population correlation matrix
+cor_mat<-matrix(ncol=k,nrow=k,rep(r,k*k))
+diag(cor_mat)<-1
+
+# population difference vector
+d_vector<-rep(d,k)
+
+# population Mahalanobis' D is exactly 1
+
+sqrt(t(d_vector) %*% solve(cor_mat) %*% d_vector)
+#>      [,1]
+#> [1,]    0
+# generate data
+
+male.dat<-
+  data.frame(sex="male",
+             mvrnorm(n = n/2,
+                     mu = 0.5*d_vector,
+                     Sigma = cor_mat,empirical = F))
+
+female.dat<-
+  data.frame(sex="female",
+             mvrnorm(n = n/2,
+                     mu = -0.5*d_vector,
+                     Sigma = cor_mat,empirical = F))
+
+dat<-rbind(male.dat,female.dat)
+
+# sample Mahalanobis' D
+
+# obtain mean differences
+
+d_vector_sample<-rep(NA,k)
+
+for (i in 1:k){
+  d_vector_sample[i]<-mean(male.dat[,i+1]-female.dat[,i+1])
+  
+}
+
+# sample pooled covariance matrix (use mean, because equal sample sizes)
+
+cov_mat_sample<-
+  (cov(male.dat[,2:17])+cov(female.dat[,2:17]))/2
+
+# calculate sample Mahalanobis' D
+sqrt(t(d_vector_sample) %*% solve(cov_mat_sample) %*% d_vector_sample)
+#>           [,1]
+#> [1,] 0.5316555
+# calculate elastic net D
+
+D.ela.zero<-
+  D_regularized(data=dat,
+              mv.vars=paste0("X",1:k),
+              group.var = "sex",
+              group.values = c("male","female"))
+
+round(D.ela.zero$D,2)
+#>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff    D
+#> [1,]    100      100   0.02    -0.02     0.1       0.1       0.1 0.04 0.35
+# use separate data for regularization and estimation
+
+D.ela.zero_out<-
+  D_regularized(data=dat,
+              mv.vars=paste0("X",1:k),
+              group.var = "sex",
+              group.values = c("male","female"),
+              out=T,size = 50,pcc = T, auc=T,pred.prob = T)
+
+round(D.ela.zero_out$D,2)
+#>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff   D
+#> [1,]     50       50      0        0       0         0         0    0 NaN
+#>      pcc.male pcc.female pcc.total auc
+#> [1,]        1          0       0.5 0.5
+# Table of predicted probabilites
+D.ela.zero_out$P.table
+#>         
+#>          [0,0.2) [0.2,0.4) [0.4,0.6) [0.6,0.8) [0.8,1]
+#>   female       0         0         1         0       0
+#>   male         0         0         1         0       0
+```
+
+### Distribution overlap
+
+This example shows how the degree of overlap between the predicted
+values across the two groups can be visualized and estimated.
+
+For parametric variants, see [Del Giudice (in
+press)](https://marcodgdotnet.files.wordpress.com/2019/04/delgiudice_measuring_sex-differences-similarities_pre.pdf).
+
+For non-parametric variants, see [Pastore
+(2018)](https://doi.org/10.21105/joss.01023) and [Pastore & Calcagnì
+(2019)](https://doi.org/10.3389/fpsyg.2019.01089).
+
+``` r
+# Use predicted values from elastic net D (out) when difference in population exists-
+
+library(ggplot2)
+
+ggplot(D.ela_out$pred.dat,
+       aes(x=pred,fill=group))+
+  geom_density(alpha=0.5)+
+  xlab("Predicted log odds of being male (FM-score)")
+```
+
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
+``` r
+# parametric overlap 
+
+## Proportion of overlap relative to a single distribution (OVL)
+
+## obtain D first
+(D<-unname(D.ela_out$D[,"D"]))
+#> [1] 0.8884007
+(OVL<-2*pnorm((-D/2)))
+#> [1] 0.6568977
+## Proportion of overlap relative to the joint distribution
+
+(OVL2<-OVL/(2-OVL))
+#> [1] 0.4890899
+# non-parametric overlap
+
+library(overlapping)
+
+np.overlap<-
+  overlap(x = list(D.ela_out$pred.dat[
+  D.ela_out$pred.dat$group=="male","pred"],
+  D.ela_out$pred.dat[
+  D.ela_out$pred.dat$group=="female","pred"]),
+  plot=T)
+```
+
+<img src="man/figures/README-unnamed-chunk-4-2.png" width="100%" />
+
+``` r
+# this corresponds to Proportion of overlap relative to the joint distribution (OVL2)
+(np.OVL2<-unname(np.overlap$OV))
+#> [1] 0.5412493
+# from which Proportion of overlap relative to a single distribution (OVL) is approximated at
+(np.OVL<-(2*np.OVL2)/(1+np.OVL2))
+#> [1] 0.7023514
+# compare overlaps
+
+round(cbind(OVL,np.OVL,OVL2,np.OVL2),2)
+#>       OVL np.OVL OVL2 np.OVL2
+#> [1,] 0.66    0.7 0.49    0.54
 ```

@@ -14,7 +14,11 @@ D_regularized_out(
   s = "lambda.min",
   type.measure = "deviance",
   rename.output = TRUE,
-  size = NULL
+  size = NULL,
+  pcc = FALSE,
+  auc = FALSE,
+  pred.prob = FALSE,
+  prob.cutoffs = seq(from = 0, to = 1, by = 0.2)
 )
 }
 \arguments{
@@ -37,11 +41,20 @@ D_regularized_out(
 \item{rename.output}{Logical. Should the output values be renamed according to the group.values? Default TRUE.}
 
 \item{size}{Integer. Size of regularization data per each group. Default 1/4 of cases.}
+
+\item{pcc}{Logical. Include probabilities of correct classification? Default FALSE.}
+
+\item{auc}{Logical. Include area under the receiver operating characteristics? Default FALSE.}
+
+\item{pred.prob}{Logical. Include table of predicted probabilities? Default FALSE.}
+
+\item{prob.cutoffs}{Vector. Cutoffs for table of predicted probabilities. Default seq(0,1,0.20).}
 }
 \value{
 \item{D}{Multivariate descriptive statistics and differences.}
 \item{pred.dat}{A data.frame with predicted values.}
 \item{cv.mod}{Regularized regression model from cv.glmnet.}
+\item{P.table}{Table of predicted probabilities by cutoffs.}
 }
 \description{
 Use separate data partition for regularization and estimation.
@@ -56,6 +69,7 @@ D_regularized_out(
   ),
   group.var = "Species",
   group.values = c("setosa", "versicolor"),
-  size = 40
+  size = 40,
+  pcc = TRUE
 )$D
 }

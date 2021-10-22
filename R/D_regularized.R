@@ -13,11 +13,15 @@
 #' @param size Integer. Number of cases in regularization data per each group. Default 1/4 of cases.
 #' @param fold Logical. Is regularization applied across sample folds with separate predictions for each fold? (Default FALSE)
 #' @param fold.var Character string. Name of the fold variable. (default NULL)
-#'
+#' @param pcc Logical. Include probabilities of correct classification? Default FALSE.
+#' @param auc Logical. Include area under the receiver operating characteristics? Default FALSE.
+#' @param pred.prob Logical. Include table of predicted probabilities? Default FALSE.
+#' @param prob.cutoffs Vector. Cutoffs for table of predicted probabilities. Default seq(0,1,0.20).
 #' @return
 #' \item{D}{Multivariate descriptive statistics and differences.}
 #' \item{pred.dat}{A data.frame with predicted values.}
 #' \item{cv.mod}{Regularized regression model from cv.glmnet.}
+#' \item{P.table}{Table of predicted probabilities by cutoffs.}
 #' @seealso \code{\link[glmnet]{cv.glmnet}}
 #' @export
 #'
@@ -32,7 +36,7 @@
 #'   data = iris[iris$Species == "setosa" | iris$Species == "versicolor", ],
 #'   mv.vars = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
 #'   group.var = "Species", group.values = c("setosa", "versicolor"),
-#'   out = TRUE, size = 15
+#'   out = TRUE, size = 15, pcc = TRUE, auc = TRUE
 #' )$D
 #'
 #' # separate sample folds
@@ -85,7 +89,11 @@ D_regularized <-
            out = FALSE,
            size = NULL,
            fold = FALSE,
-           fold.var = NULL) {
+           fold.var = NULL,
+           pcc = FALSE,
+           auc = FALSE,
+           pred.prob = FALSE,
+           prob.cutoffs = seq(0, 1, 0.20)) {
 
     # out-of-bag and folds (fold_out)?
     if (out & fold) {
@@ -99,7 +107,11 @@ D_regularized <-
         type.measure = type.measure,
         rename.output = rename.output,
         size = size,
-        fold.var = fold.var
+        fold.var = fold.var,
+        pcc = pcc,
+        auc = auc,
+        pred.prob = pred.prob,
+        prob.cutoffs = prob.cutoffs
       )
     } # out-of-bag and no folds (out)?
     else if (out & !fold) {
@@ -112,7 +124,11 @@ D_regularized <-
         size = size,
         s = s,
         type.measure = type.measure,
-        rename.output = rename.output
+        rename.output = rename.output,
+        pcc = pcc,
+        auc = auc,
+        pred.prob = pred.prob,
+        prob.cutoffs = prob.cutoffs
       )
     } # not out-of-bag and folds (fold)?
     else if (!out & fold) {

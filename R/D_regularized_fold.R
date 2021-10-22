@@ -59,10 +59,14 @@ D_regularized_fold <-
         fold = unique(data[, fold.var])
       )
 
+    # data frame joining information
+    join_vars <- colnames(fold.num.data)[2]
+    names(join_vars) <- fold.var
+
     data <- dplyr::left_join(
       x = data,
       y = fold.num.data,
-      by = c("fold")
+      by = join_vars
     )
 
     foldid <- data[, "fold.num"] # $fold.num
@@ -79,7 +83,7 @@ D_regularized_fold <-
 
     preds <- data.frame(
       group = data[, group.var],
-      fold = data[, "fold"],
+      fold = data[, fold.var],
       pred = as.numeric(
         stats::predict(cv.mod,
           newx = as.matrix(data[, c(mv.vars)]),
@@ -97,7 +101,7 @@ D_regularized_fold <-
         var = "pred",
         group.var = "group",
         group.values = group.values,
-        rename.output = FALSE
+        rename.output = rename.output
       )
     }
 
@@ -107,17 +111,23 @@ D_regularized_fold <-
       D.folded.df,
       colwise_pool(
         data = D.folded.df,
-        n1 = "n.1",
-        n2 = "n.2",
-        m1 = "m.1",
-        m2 = "m.1",
-        sd1 = "sd.1",
-        sd2 = "sd.2"
+        n1 = names(D.folded.df)[1],
+        n2 = names(D.folded.df)[2],
+        m1 = names(D.folded.df)[3],
+        m2 = names(D.folded.df)[4],
+        sd1 = names(D.folded.df)[5],
+        sd2 = names(D.folded.df)[6]
       )
     )
 
     D.folded.df$d.sd.total <- D.folded.df$diff /
       D.folded.df$pooled.sd.total
+
+    # rename pooled.sd columns if requested
+    if (rename.output) {
+      names(D.folded.df)[names(D.folded.df) == "pooled.sd.1"] <- paste0("pooled.sd.", group.values[1])
+      names(D.folded.df)[names(D.folded.df) == "pooled.sd.2"] <- paste0("pooled.sd.", group.values[2])
+    }
 
     D.folded.df <- D.folded.df[order(row.names(D.folded.df)), ]
 

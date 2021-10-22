@@ -5,6 +5,7 @@
 #' @param group.var The name of the group variable.
 #' @param group.values Vector of length 2, group values (e.g. c("male", "female) or c(0,1)).
 #' @param rename.output Logical. Should the output values be renamed according to the group.values? Default TRUE.
+#' @param infer Logical. Statistical inference with Welch test? (default FALSE)
 #'
 #' @return Descriptive statistics and mean differences
 #' @export
@@ -12,14 +13,15 @@
 #' @examples
 #' d_pooled_sd(iris[iris$Species == "setosa" | iris$Species == "versicolor", ],
 #'   var = "Petal.Length", group.var = "Species",
-#'   group.values = c("setosa", "versicolor")
+#'   group.values = c("setosa", "versicolor"), infer = TRUE
 #' )
 d_pooled_sd <-
   function(data,
            var,
            group.var,
            group.values,
-           rename.output = TRUE) {
+           rename.output = TRUE,
+           infer = FALSE) {
     dat1 <- data[data[, group.var] == group.values[1], ]
     dat2 <- data[data[, group.var] == group.values[2], ]
 
@@ -49,6 +51,17 @@ d_pooled_sd <-
           "diff",
           "D"
         )
+    }
+
+    if (infer) {
+      t_test <-
+        stats::t.test(dat1[, var], dat2[, var], var.equal = FALSE)
+
+      t_stat <- unname(t_test$statistic)
+      df <- unname(t_test$parameter)
+      p <- unname(t_test$p.value)
+
+      output <- cbind(output, t_stat, df, p)
     }
 
 

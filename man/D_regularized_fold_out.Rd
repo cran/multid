@@ -14,7 +14,11 @@ D_regularized_fold_out(
   type.measure = "deviance",
   rename.output = TRUE,
   size = NULL,
-  fold.var
+  fold.var,
+  pcc = FALSE,
+  auc = FALSE,
+  pred.prob = FALSE,
+  prob.cutoffs = seq(from = 0, to = 1, by = 0.2)
 )
 }
 \arguments{
@@ -37,11 +41,20 @@ D_regularized_fold_out(
 \item{size}{Integer. Size of regularization data per each group. Default 1/4 of cases.}
 
 \item{fold.var}{Name of the fold variable.}
+
+\item{pcc}{Logical. Include probabilities of correct classification? Default FALSE.}
+
+\item{auc}{Logical. Include area under the receiver operating characteristics? Default FALSE.}
+
+\item{pred.prob}{Logical. Include table of predicted probabilities? Default FALSE.}
+
+\item{prob.cutoffs}{Vector. Cutoffs for table of predicted probabilities. Default seq(0,1,0.20).}
 }
 \value{
 \item{D}{Multivariate descriptive statistics and differences.}
 \item{pred.dat}{A data.frame with predicted values.}
 \item{cv.mod}{Regularized regression model from cv.glmnet.}
+\item{P.table}{Table of predicted probabilities by cutoffs.}
 }
 \description{
 Use separate data partitions for regularization and estimation across defined data folds.
@@ -64,6 +77,7 @@ D_regularized_fold_out(
   group.var = "sex",
   group.values = c("female", "male"),
   fold.var = "fold",
-  size = 17
+  size = 17,
+  pcc = TRUE
 )$D
 }

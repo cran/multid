@@ -10,11 +10,16 @@
 #' @param type.measure Which measure is used during cross-validation. Default "deviance".
 #' @param rename.output Logical. Should the output values be renamed according to the group.values? Default TRUE.
 #' @param size Integer. Size of regularization data per each group. Default 1/4 of cases.
+#' @param pcc Logical. Include probabilities of correct classification? Default FALSE.
+#' @param auc Logical. Include area under the receiver operating characteristics? Default FALSE.
+#' @param pred.prob Logical. Include table of predicted probabilities? Default FALSE.
+#' @param prob.cutoffs Vector. Cutoffs for table of predicted probabilities. Default seq(0,1,0.20).
 #'
 #' @return
 #' \item{D}{Multivariate descriptive statistics and differences.}
 #' \item{pred.dat}{A data.frame with predicted values.}
 #' \item{cv.mod}{Regularized regression model from cv.glmnet.}
+#' \item{P.table}{Table of predicted probabilities by cutoffs.}
 #' @export
 #'
 #' @examples D_regularized_out(
@@ -26,7 +31,8 @@
 #'   ),
 #'   group.var = "Species",
 #'   group.values = c("setosa", "versicolor"),
-#'   size = 40
+#'   size = 40,
+#'   pcc = TRUE
 #' )$D
 D_regularized_out <-
   function(data,
@@ -38,7 +44,11 @@ D_regularized_out <-
            s = "lambda.min",
            type.measure = "deviance",
            rename.output = TRUE,
-           size = NULL) {
+           size = NULL,
+           pcc = FALSE,
+           auc = FALSE,
+           pred.prob = FALSE,
+           prob.cutoffs = seq(from = 0, to = 1, by = 0.20)) {
     data$group.var.num <-
       ifelse(data[, group.var] == group.values[1], 1,
         ifelse(data[, group.var] == group.values[2], 0,
@@ -46,7 +56,11 @@ D_regularized_out <-
         )
       )
 
-    if (is.null(size)){size=round(nrow(data)/4,0)} else {size=size}
+    if (is.null(size)) {
+      size <- round(nrow(data) / 4, 0)
+    } else {
+      size <- size
+    }
 
     data$row.nmbr <- rownames(data)
 
@@ -88,8 +102,65 @@ D_regularized_out <-
       rename.output = rename.output
     )
 
-    comb.output <- list(D = D,
-                        pred.dat = preds,
-                        cv.mod = cv.mod)
+    # Add pcc
+
+    if (pcc) {
+      pcc.out <-
+        pcc(
+          data = preds,
+          pred.var = "pred",
+          group.var = "group",
+          group.values = group.values
+        )
+
+      # inherit naming from D frame
+      colnames(pcc.out) <-
+        c(
+          paste0("pcc.", substr(colnames(D)[1:2], 3, stop = 999)),
+          "pcc.total"
+        )
+
+      D <- cbind(D, pcc.out)
+    }
+
+    if (auc) {
+      auc <- pROC::roc(
+        response = preds[, "group"],
+        predictor = preds[, "pred"],
+        direction = ">",
+        levels = group.values,
+        quiet = TRUE
+      )$auc[1]
+      D <- cbind(D, auc)
+    }
+
+    if (pred.prob) {
+      # calculate probability
+      preds$P <- exp(preds$pred) / (1 + exp(preds$pred))
+      # cutoffs frequencies
+      preds$cut.groups <-
+        cut(preds$P,
+          breaks = prob.cutoffs,
+          include.lowest = TRUE, right = FALSE
+        )
+      # probability table
+      P.table <-
+        prop.table(
+          table(
+            as.character(preds$group),
+            preds$cut.groups
+          ),
+          margin = 1
+        )
+    } else {
+      P.table <- NULL
+    }
+
+    comb.output <- list(
+      D = D,
+      pred.dat = preds,
+      cv.mod = cv.mod,
+      P.table = P.table
+    )
     return(comb.output)
   }
