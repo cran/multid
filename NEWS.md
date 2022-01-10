@@ -1,3 +1,7 @@
+# multid 0.3.0
+
+* Added sem_dadas and ml_dadas functions for predicting algebraic difference scores in structural equation (sem_dadas) and multilevel model (ml_dadas). DADAS acronym follows from the joint hypothesis test of Difference between Absolute Differences and Absolute Sums between (regression coefficients on difference score components).
+
 # multid 0.2.0
 
 * Fixed bug: renaming output in D_regularized_fold functions

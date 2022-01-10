@@ -1,6 +1,6 @@
-fdf9dc0d3714257687d617d453c613b5 *DESCRIPTION
-0018dbff8c675ebf2ce5cd321585979b *NAMESPACE
-49e700c7254f5e69be9fed2bff5fe4b0 *NEWS.md
+30cb82082fb76401e36d356b0996831b *DESCRIPTION
+a69bb26a1c0463afad0693ebfe54ebf6 *NAMESPACE
+50201a581a68f46d39741cb72d734002 *NEWS.md
 ac9857d34aee591ed6b78bf4a6e3b81a *R/D_regularized.R
 a06eead036dad3ad8849ccc434f7a22b *R/D_regularized_fold.R
 5c48b18a4ab0886d2045f052f2db3b3d *R/D_regularized_fold_out.R
@@ -9,8 +9,10 @@ d941c1b1a75e39ba9f55b039a8f8cc66 *R/D_regularized_out.R
 f589f9b11481ac588be9d20e3f297e6e *R/colwise_pool.R
 37fc62916dc170bfde5211d52b11ed19 *R/d_pooled_sd.R
 2516a7d476d6fce7b6c21bf7a497bd14 *R/globals.R
+b75c328b228c1a592ed78df778328901 *R/ml_dadas.R
 acdafc3c0b0fd4b7fe0c77fc3234396c *R/pcc.R
-20970c5dccebe5a8193f78701f269548 *README.md
+0d77cff0a884be7b34fa7520221623e3 *R/sem_dadas.R
+3b24970dae682f6cc005ff1aec323ccc *README.md
 e8bcd719a58434a1552d2fb2810aac9d *inst/CITATION
 0cfa5c9dd88f5b2ba832e04796391a4c *man/D_regularized.Rd
 898b78d74f8ee5b0d28eae7d3309170d *man/D_regularized_fold.Rd
@@ -20,5 +22,7 @@ fe57740b9b92626330d0131271df11d6 *man/D_regularized_vanilla.Rd
 006f5ed056141020be42a7fd62d5cbb1 *man/colwise_pool.Rd
 38a1bc655411c7dc396be303bcc4de55 *man/d_pooled_sd.Rd
 ca8a0f2a6b88fbdf14f9584c8ac609a7 *man/figures/README-unnamed-chunk-4-1.png
-85e3d62e4853b62614029eade78512af *man/figures/README-unnamed-chunk-4-2.png
+84ed0a42e47cc2b2573733ed1916ef38 *man/figures/README-unnamed-chunk-4-2.png
+a0070d7e1aecc01a6319c50f8e09cee5 *man/ml_dadas.Rd
 95512548f4fcc48d26ccebca3e62a009 *man/pcc.Rd
+5d9b3f4f92afc724cef67fa506c8caca *man/sem_dadas.Rd

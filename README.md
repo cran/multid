@@ -9,12 +9,11 @@
 status](https://app.travis-ci.com/vjilmari/multid.svg?branch=main)](https://app.travis-ci.com/vjilmari/multid/)
 <!-- badges: end -->
 
-The goal of multid is to provide tools for regularized measurement of
-multivariate differences between two groups (e.g., sex differences).
-Regularization via logistic regression variants enables inclusion of
-large number of correlated variables in the multivariate set while
-providing k-fold cross-validation and regularization to avoid
-overfitting.
+multid provides tools for regularized measurement of multivariate
+differences between two groups (e.g., sex differences). Regularization
+via logistic regression variants enables inclusion of large number of
+correlated variables in the multivariate set while providing k-fold
+cross-validation and regularization to avoid overfitting.
 
 Predictive approach as implemented with regularized methods also allows
 for examination of group-membership probabilities and their
@@ -34,6 +33,15 @@ Studies in which these methods have been used:
     Personality, Values, Cognitive Ability, School Grades, and
     Educational Track. Manuscript in
     review.](https://doi.org/10.31234/osf.io/j59bs)
+
+In addition, multid also includes functions for testing hypothesis that
+consider predicting algebraic difference scores. A joint test that
+focuses on the regression coefficients on the difference score
+components (minuend and subtrahend) is provided in the structural
+equation modeling framework (sem_dadas) and multilevel models
+(ml_dadas). Difference between Absolute Difference and Absolute Sum of
+the regression coefficients (DADAS) is used for direct test of whether
+the coefficients can be interpreted as predicting a difference score.
 
 ## Installation
 
@@ -80,6 +88,7 @@ round(D.iris$D,2)
 #> [1,]       50           50     8.35        -9.38      1.39          2.25
 #>      pooled.sd  diff    D
 #> [1,]      1.87 17.73 9.49
+
 # Use different partitions of data for regularization and estimation
 D.iris_out<-
   D_regularized(
@@ -104,6 +113,7 @@ round(D.iris_out$D,2)
 #> [1,]       15           15     7.61        -8.97      1.79          2.35
 #>      pooled.sd  diff    D
 #> [1,]      2.09 16.59 7.93
+
 # print table of predicted probabilities
 D.iris_out$P.table
 #>             
@@ -245,6 +255,7 @@ d_vector<-rep(d,k)
 sqrt(t(d_vector) %*% solve(cor_mat) %*% d_vector)
 #>      [,1]
 #> [1,]    1
+
 # generate data
 library(MASS)
 
@@ -282,6 +293,7 @@ cov_mat_sample<-
 sqrt(t(d_vector_sample) %*% solve(cov_mat_sample) %*% d_vector_sample)
 #>          [,1]
 #> [1,] 1.265318
+
 # calculate elastic net D
 
 D.ela<-
@@ -293,6 +305,7 @@ D.ela<-
 round(D.ela$D,2)
 #>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff    D
 #> [1,]    100      100   0.54    -0.52    0.86      0.88      0.87 1.06 1.22
+
 # use separate data for regularization and estimation
 
 D.ela_out<-D_regularized(data=dat,
@@ -306,6 +319,7 @@ round(D.ela_out$D,2)
 #> [1,]     50       50   0.55    -0.33    1.04      0.92      0.99 0.88 0.89
 #>      pcc.male pcc.female pcc.total  auc
 #> [1,]     0.68       0.68      0.68 0.73
+
 # Table of predicted probabilites
 D.ela_out$P.table
 #>         
@@ -344,6 +358,7 @@ d_vector<-rep(d,k)
 sqrt(t(d_vector) %*% solve(cor_mat) %*% d_vector)
 #>      [,1]
 #> [1,]    0
+
 # generate data
 
 male.dat<-
@@ -380,6 +395,7 @@ cov_mat_sample<-
 sqrt(t(d_vector_sample) %*% solve(cov_mat_sample) %*% d_vector_sample)
 #>           [,1]
 #> [1,] 0.5316555
+
 # calculate elastic net D
 
 D.ela.zero<-
@@ -391,6 +407,7 @@ D.ela.zero<-
 round(D.ela.zero$D,2)
 #>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff    D
 #> [1,]    100      100   0.02    -0.02     0.1       0.1       0.1 0.04 0.35
+
 # use separate data for regularization and estimation
 
 D.ela.zero_out<-
@@ -405,6 +422,7 @@ round(D.ela.zero_out$D,2)
 #> [1,]     50       50      0        0       0         0         0    0 NaN
 #>      pcc.male pcc.female pcc.total auc
 #> [1,]        1          0       0.5 0.5
+
 # Table of predicted probabilites
 D.ela.zero_out$P.table
 #>         
@@ -446,12 +464,15 @@ ggplot(D.ela_out$pred.dat,
 ## obtain D first
 (D<-unname(D.ela_out$D[,"D"]))
 #> [1] 0.8884007
+
 (OVL<-2*pnorm((-D/2)))
 #> [1] 0.6568977
+
 ## Proportion of overlap relative to the joint distribution
 
 (OVL2<-OVL/(2-OVL))
 #> [1] 0.4890899
+
 # non-parametric overlap
 
 library(overlapping)
@@ -470,12 +491,72 @@ np.overlap<-
 # this corresponds to Proportion of overlap relative to the joint distribution (OVL2)
 (np.OVL2<-unname(np.overlap$OV))
 #> [1] 0.5412493
+
 # from which Proportion of overlap relative to a single distribution (OVL) is approximated at
 (np.OVL<-(2*np.OVL2)/(1+np.OVL2))
 #> [1] 0.7023514
+
 # compare overlaps
 
 round(cbind(OVL,np.OVL,OVL2,np.OVL2),2)
 #>       OVL np.OVL OVL2 np.OVL2
 #> [1,] 0.66    0.7 0.49    0.54
+```
+
+### Predicting Difference Scores
+
+``` r
+# sem example
+set.seed(342356)
+d <- data.frame(
+ var1 = rnorm(50),
+ var2 = rnorm(50),
+ x = rnorm(50)
+)
+round(sem_dadas(
+   data = d, var1 = "var1", var2 = "var2",
+   predictor = "x", center = TRUE, scale = TRUE
+ )$results,3)
+#>                       est    se      z pvalue ci.lower ci.upper
+#> b_11                0.107 0.143  0.747  0.455   -0.174    0.388
+#> b_21               -0.078 0.110 -0.710  0.477   -0.294    0.138
+#> b_10               -0.031 0.151 -0.205  0.837   -0.327    0.265
+#> b_20                0.031 0.127  0.244  0.807   -0.218    0.280
+#> rescov_12          -0.153 0.140 -1.096  0.273   -0.428    0.121
+#> coef_diff           0.185 0.196  0.943  0.346   -0.200    0.570
+#> coef_diff_std       0.120 0.125  0.960  0.337   -0.125    0.365
+#> coef_sum            0.029 0.163  0.176  0.860   -0.291    0.349
+#> diff_abs_magnitude  0.029 0.163  0.176  0.860   -0.291    0.349
+#> abs_coef_diff       0.185 0.196  0.943  0.346   -0.200    0.570
+#> abs_coef_sum        0.029 0.163  0.176  0.860   -0.291    0.349
+#> dadas               0.157 0.220  0.710  0.239   -0.275    0.588
+
+# multilevel example
+
+set.seed(95332)
+n1 <- 10 # groups
+n2 <- 10 # observations per group
+
+dat <- data.frame(
+  group = rep(c(LETTERS[1:n1]), each = n2),
+  x = sample(c(-0.5, 0.5), n1 * n2, replace = TRUE),
+  w = rep(sample(1:5, n1, replace = TRUE), each = n2),
+  y = sample(1:5, n1 * n2, replace = TRUE)
+)
+library(lmerTest)
+fit <- lmerTest::lmer(y ~ x * w + (x | group),
+  data = dat
+)
+
+round(ml_dadas(fit,
+  predictor = "w",
+  diff_var = "x",
+  diff_var_values = c(0.5, -0.5)
+), 3)
+#>          estimate    SE    df t.ratio p.value
+#> -0.5       -0.077 0.177 8.053  -0.435   0.675
+#> 0.5        -0.279 0.136 9.326  -2.048   0.070
+#> abs_diff    0.202 0.228 7.071   0.886   0.202
+#> abs_sum     0.356 0.219 6.952   1.630   0.074
+#> dadas      -0.154 0.354 8.053  -0.435   0.662
 ```
