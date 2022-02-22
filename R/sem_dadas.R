@@ -105,6 +105,7 @@ sem_dadas <- function(data,
       ),
       stats::cor(data[, c(var1, var2, "diff", predictor)])
     )
+
   colnames(descriptives) <-
     c("M", "SD", var1, var2, "diff", predictor)
 
@@ -146,14 +147,12 @@ sem_dadas <- function(data,
     level = level
   ))
 
-  dadas <- c(
-    Estimate = pars[pars$label == "dadas_two_sided", "est"],
-    "Std. Error" = pars[pars$label == "dadas_two_sided", "se"],
-    z = pars[pars$label == "dadas_two_sided", "z"]
-  )
+  # one-sided tests for absolute parameters
 
-  dadas["p.pos"] <-
-    stats::pnorm(dadas["z"], lower.tail = F)
+  labels <- c("abs_coef_diff", "abs_coef_sum", "dadas_two_sided")
+
+  osts <- pars[pars$label %in% labels, ]
+  osts$p.pos <- stats::pnorm(osts[, "z"], lower.tail = F)
 
   res.pars <- c(
     "b_11", "b_21", "b_10", "b_20", "rescov_12",
@@ -167,9 +166,10 @@ sem_dadas <- function(data,
   rownames(results) <- results$label
   results <- results[, 2:ncol(results)]
 
+  # replace two-sided tests with one-sided for absolute parameters
 
-  results["dadas_two_sided", "pvalue"] <-
-    unname(dadas["p.pos"])
+  results[labels, "pvalue"] <- osts[, "p.pos"]
+
   rownames(results) <- c(
     rownames(results)[1:(nrow(results) - 1)],
     "dadas"
@@ -186,7 +186,7 @@ sem_dadas <- function(data,
 
   r_diff <- (b_11 - b_21) * sd_predictor /
     sqrt(cov_C1C2[var1, var1] + cov_C1C2[var2, var2]
-         - 2 * cov_C1C2[var1, var2])
+      - 2 * cov_C1C2[var1, var2])
   r2_diff <- r_diff^2
 
   r2_diff_row <-
@@ -202,7 +202,6 @@ sem_dadas <- function(data,
     descriptives = descriptives,
     parameter_estimates = pars,
     transformed_data = output.data,
-    dadas = dadas,
     rsquared = rsquared,
     results = results
   )
