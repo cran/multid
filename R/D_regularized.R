@@ -22,6 +22,8 @@
 #' \item{pred.dat}{A data.frame with predicted values.}
 #' \item{cv.mod}{Regularized regression model from cv.glmnet.}
 #' \item{P.table}{Table of predicted probabilities by cutoffs.}
+#' @references Lönnqvist, J. E., & Ilmarinen, V. J. (2021). Using a continuous measure of genderedness to assess sex differences in the attitudes of the political elite. Political Behavior, 43, 1779–1800. https://doi.org/10.1007/s11109-021-09681-2
+#' @references Ilmarinen, V. J., Vainikainen, M. P., & Lönnqvist, J. E. (2022). Is there a g-factor of genderedness? Using a continuous measure of genderedness to assess sex differences in personality, values, cognitive ability, school grades, and educational track. European Journal of Personality. https://doi.org/10.1177/08902070221088155
 #' @seealso \code{\link[glmnet]{cv.glmnet}}
 #' @export
 #'

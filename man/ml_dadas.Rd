@@ -4,7 +4,18 @@
 \alias{ml_dadas}
 \title{Predicting algebraic difference scores in multilevel model}
 \usage{
-ml_dadas(model, predictor, diff_var, diff_var_values)
+ml_dadas(
+  model,
+  predictor,
+  diff_var,
+  diff_var_values,
+  scaled_estimates = FALSE,
+  re_cov_test = FALSE,
+  var_boot_test = FALSE,
+  nsim = NULL,
+  level = 0.95,
+  seed = NULL
+)
 }
 \arguments{
 \item{model}{Multilevel model fitted with lmerTest.}
@@ -14,12 +25,28 @@ ml_dadas(model, predictor, diff_var, diff_var_values)
 \item{diff_var}{Character string. A variable indicative of difference score components (two groups).}
 
 \item{diff_var_values}{Vector. Values of the component score groups in diff_var.}
+
+\item{scaled_estimates}{Logical. Are scaled estimates obtained? Does fit a reduced model for correct standard deviations. (Default FALSE)}
+
+\item{re_cov_test}{Logical. Significance test for random effect covariation? Does fit a reduced model without the correlation. (Default FALSE)}
+
+\item{var_boot_test}{Logical. Compare variance by lower-level groups at the upper-level in a reduced model with bootstrap? (Default FALSE)}
+
+\item{nsim}{Numeric. Number of bootstrap simulations.}
+
+\item{level}{Numeric. The confidence level required for the var_boot_test output (Default .95)}
+
+\item{seed}{Numeric. Seed number for bootstrap simulations.}
 }
 \value{
-A data frame including regression coefficients for component scores and dadas (One sided dadas-test for positivity of abs(b_11-b_21)-abs(b_11+b_21)).
+\item{dadas}{A data frame including regression coefficients for component scores and dadas.}
+\item{scaled_estimates}{Scaled regression coefficients for difference score components and difference score.}
+\item{vpc_at_reduced}{Variance partition coefficients in the model without the predictor and interactions.}
+\item{re_cov_test}{Likelihood ratio significance test for random effect covariation.}
+\item{boot_var_diffs}{List of different variance bootstrap tests.}
 }
 \description{
-Predicting algebraic difference scores in multilevel model
+Decomposes difference score predictions to predictions of difference score components by probing simple effects at the levels of the binary moderator.
 }
 \examples{
 \dontrun{
@@ -42,6 +69,6 @@ round(ml_dadas(fit,
   predictor = "w",
   diff_var = "x",
   diff_var_values = c(0.5, -0.5)
-), 3)
+)$dadas, 3)
 }
 }

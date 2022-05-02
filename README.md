@@ -7,6 +7,7 @@
 
 [![Travis build
 status](https://app.travis-ci.com/vjilmari/multid.svg?branch=main)](https://app.travis-ci.com/vjilmari/multid/)
+
 <!-- badges: end -->
 
 multid provides tools for regularized measurement of multivariate
@@ -24,15 +25,16 @@ gender-typicality distributions used in gender diagnosticity methodology
 
 Studies in which these methods have been used:
 
-1.  [Lönnqvist & Ilmarinen (2021). Using a Continuous Measure of
-    Genderedness to Assess Sex Differences in the Attitudes of the
-    Political Elite. Political
-    Behavior.](https://doi.org/10.1007/s11109-021-09681-2)
-2.  [Ilmarinen et al. (2021). Is There a g-factor of Genderedness? Using
-    a Continuous Measure of Genderedness to Assess Sex Differences in
-    Personality, Values, Cognitive Ability, School Grades, and
-    Educational Track. Manuscript in
-    review.](https://doi.org/10.31234/osf.io/j59bs)
+1.  [Lönnqvist, J. E., & Ilmarinen, V. J. (2021). Using a continuous
+    measure of genderedness to assess sex differences in the attitudes
+    of the political elite. *Political Behavior, 43*,
+    1779–1800.](https://doi.org/10.1007/s11109-021-09681-2)
+
+2.  [Ilmarinen, V. J., Vainikainen, M. P., & Lönnqvist, J. E. (2022). Is
+    there a g-factor of genderedness? Using a continuous measure of
+    genderedness to assess sex differences in personality, values,
+    cognitive ability, school grades, and educational track. *European
+    Journal of Personality*.](https://doi.org/10.1177/08902070221088155)
 
 In addition, multid also includes functions for testing hypothesis that
 consider predicting algebraic difference scores. A joint test that
@@ -178,7 +180,8 @@ round(D_regularized(
 
 # Different partitions for regularization and estimation for each data fold.
 
-# Request probabilities of correct classification (pcc) and area under the receiver operating characteristics (auc) for the output.
+# Request probabilities of correct classification (pcc) and 
+# area under the receiver operating characteristics (auc) for the output.
 
 round(D_regularized(
   data = d,
@@ -237,7 +240,8 @@ centroids in the population is D = 1.
 
 ``` r
 set.seed(8327482)
-# generate data from sixteen correlated (r = .20) variables each with d = .50 difference (equals to Mahalanobis' D = 1)
+# generate data from sixteen correlated (r = .20) variables each with d = .50 difference 
+#(equals to Mahalanobis' D = 1)
 k=16
 r=0.2
 d=0.5
@@ -340,7 +344,8 @@ with independent estimation data shows D = 0.
 
 ``` r
 set.seed(8327482)
-# generate data from sixteen correlated (r = .20) variables each with d = .00 difference (equals to Mahalanobis' D = 0)
+# generate data from sixteen correlated (r = .20) variables each with d = .00 difference 
+# (equals to Mahalanobis' D = 0)
 k=16
 r=0.2
 d=0.0
@@ -527,8 +532,8 @@ round(sem_dadas(
 #> coef_diff_std       0.120 0.125  0.960  0.337   -0.125    0.365
 #> coef_sum            0.029 0.163  0.176  0.860   -0.291    0.349
 #> diff_abs_magnitude  0.029 0.163  0.176  0.860   -0.291    0.349
-#> abs_coef_diff       0.185 0.196  0.943  0.346   -0.200    0.570
-#> abs_coef_sum        0.029 0.163  0.176  0.860   -0.291    0.349
+#> abs_coef_diff       0.185 0.196  0.943  0.173   -0.200    0.570
+#> abs_coef_sum        0.029 0.163  0.176  0.430   -0.291    0.349
 #> dadas               0.157 0.220  0.710  0.239   -0.275    0.588
 
 # multilevel example
@@ -549,10 +554,9 @@ fit <- lmerTest::lmer(y ~ x * w + (x | group),
 )
 
 round(ml_dadas(fit,
-  predictor = "w",
-  diff_var = "x",
-  diff_var_values = c(0.5, -0.5)
-), 3)
+               predictor = "w",
+               diff_var = "x",
+               diff_var_values = c(0.5, -0.5))$dadas, 3)
 #>          estimate    SE    df t.ratio p.value
 #> -0.5       -0.077 0.177 8.053  -0.435   0.675
 #> 0.5        -0.279 0.136 9.326  -2.048   0.070

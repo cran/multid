@@ -11,6 +11,7 @@ sem_dadas(
   center = FALSE,
   scale = FALSE,
   predictor,
+  covariates = NULL,
   estimator = "MLR",
   level = 0.95,
   sampling.weights = NULL
@@ -29,6 +30,8 @@ sem_dadas(
 
 \item{predictor}{Character string. Variable name of independent variable predicting difference score.}
 
+\item{covariates}{Character string or vector. Variable names of covariates (Default NULL).}
+
 \item{estimator}{Character string. Estimator used in SEM (Default "MLR").}
 
 \item{level}{Numeric. The confidence level required for the result output (Default .95)}
@@ -38,7 +41,7 @@ sem_dadas(
 \value{
 \item{descriptives}{Means, standard deviations, and intercorrelations.}
 \item{parameter_estimates}{Parameter estimates from the structural equation model.}
-\item{variances}{F test and Fligner-Killeen test for homogeneity of variances between var1 and var2.}
+\item{variance_test}{Variances and covariances of component scores.}
 \item{transformed_data}{Data frame with variables used in SEM.}
 \item{dadas}{One sided dadas-test for positivity of abs(b_11-b_21)-abs(b_11+b_21).}
 \item{results}{Summary of key results.}
@@ -56,7 +59,7 @@ d <- data.frame(
 sem_dadas(
   data = d, var1 = "var1", var2 = "var2",
   predictor = "x", center = TRUE, scale = TRUE
-)
+)$results
 }
 \references{
 Edwards, J. R. (1995). Alternatives to Difference Scores as Dependent Variables in the Study of Congruence in Organizational Research. Organizational Behavior and Human Decision Processes, 64(3), 307–324.
