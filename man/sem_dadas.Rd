@@ -50,6 +50,7 @@ sem_dadas(
 Predicting algebraic difference scores in structural equation model
 }
 \examples{
+\dontrun{
 set.seed(342356)
 d <- data.frame(
   var1 = rnorm(50),
@@ -60,6 +61,7 @@ sem_dadas(
   data = d, var1 = "var1", var2 = "var2",
   predictor = "x", center = TRUE, scale = TRUE
 )$results
+}
 }
 \references{
 Edwards, J. R. (1995). Alternatives to Difference Scores as Dependent Variables in the Study of Congruence in Organizational Research. Organizational Behavior and Human Decision Processes, 64(3), 307–324.

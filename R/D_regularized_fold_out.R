@@ -14,6 +14,7 @@
 #' @param auc Logical. Include area under the receiver operating characteristics? Default FALSE.
 #' @param pred.prob Logical. Include table of predicted probabilities? Default FALSE.
 #' @param prob.cutoffs Vector. Cutoffs for table of predicted probabilities. Default seq(0,1,0.20).
+#' @param append.data Logical. If TRUE, the testing data split is appended to the predicted variables.
 #'
 #' @return
 #' \item{D}{Multivariate descriptive statistics and differences.}
@@ -56,7 +57,8 @@ D_regularized_fold_out <-
            pcc = FALSE,
            auc = FALSE,
            pred.prob = FALSE,
-           prob.cutoffs = seq(from = 0, to = 1, by = 0.20)) {
+           prob.cutoffs = seq(from = 0, to = 1, by = 0.20),
+           append.data = FALSE) {
     data$group.var.num <-
       ifelse(data[, group.var] == group.values[1], 1,
         ifelse(data[, group.var] == group.values[2], 0,
@@ -97,7 +99,7 @@ D_regularized_fold_out <-
 
     train.data <- dplyr::sample_n(data.grouped,
       size = size,
-      replace = F
+      replace = FALSE
     )
 
     test.data <- data[!(data$row.nmbr %in% train.data$row.nmbr), ]
@@ -124,6 +126,10 @@ D_regularized_fold_out <-
         )
       )
     )
+
+    if (append.data) {
+      preds <- cbind(preds, test.data)
+    }
 
     D.folded <- list()
     fold.names <- unique(preds[, "fold"])

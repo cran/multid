@@ -9,6 +9,7 @@
 #' @param type.measure Which measure is used during cross-validation. Default "deviance".
 #' @param rename.output Logical. Should the output values be renamed according to the group.values? Default TRUE.
 #' @param fold.var Character string. Name of the fold variable.
+#' @param append.data Logical. If TRUE, the original data is appended to the predicted variables.
 #'
 #' @return
 #' \item{D}{Multivariate descriptive statistics and differences.}
@@ -45,7 +46,8 @@ D_regularized_fold <-
            s = "lambda.min",
            type.measure = "deviance",
            rename.output = TRUE,
-           fold.var) {
+           fold.var,
+           append.data = FALSE) {
     data$group.var.num <-
       ifelse(data[, group.var] == group.values[1], 1,
         ifelse(data[, group.var] == group.values[2], 0,
@@ -91,6 +93,10 @@ D_regularized_fold <-
         )
       )
     )
+
+    if (append.data) {
+      preds <- cbind(preds, data)
+    }
 
     D.folded <- list()
     fold.names <- unique(preds[, "fold"])

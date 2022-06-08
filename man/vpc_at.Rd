@@ -14,7 +14,7 @@ vpc_at(model, lvl1.var, lvl1.values)
 \item{lvl1.values}{Level 1 variable values.}
 }
 \value{
-Data frame of level 2 variance and std.dev. estimates at level 1 variable values and respective VPCs.
+Data frame of level 2 variance and std.dev. estimates at level 1 variable values, respective VPCs (ICC1s) and group-mean reliabilities (ICC2s) (Bliese, 2000).
 }
 \description{
 Calculates variance estimates (level-2 Intercept variance) and variance partition coefficients (i.e., intra-class correlation) at selected values of predictor values in two-level linear models with random effects (intercept, slope, and their covariation).
@@ -40,4 +40,6 @@ vpc_at(
 }
 \references{
 Goldstein, H., Browne, W., & Rasbash, J. (2002). Partitioning Variation in Multilevel Models. Understanding Statistics, 1(4), 223–231. https://doi.org/10.1207/S15328031US0104_02
+
+Bliese, P. D. (2000). Within-group agreement, non-independence, and reliability: Implications for data aggregation and analysis. In K. J. Klein & S. W. J. Kozlowski (Eds.), Multilevel theory, research, and methods in organizations: Foundations, extensions, and new directions (pp. 349–381). Jossey-Bass.
 }

@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Ville-Juhani Ilmarinen" />
+
+<meta name="date" content="2022-06-08" />
+
+<title>Multivariate Sex Differences in Personality with Regularized Regression in multid -package</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Multivariate Sex Differences in Personality
+with Regularized Regression in multid -package</h1>
+<h4 class="author">Ville-Juhani Ilmarinen</h4>
+<h4 class="date">2022-06-08</h4>
+
+
+
+<p>This vignette details the procedures by which multivariate sex
+differences in personality traits can be estimated by using regularized
+logistic regression and gender diagnosticity approach with
+<em>multid</em> package.</p>
+<p>This approach can be used for regularized measurement of multivariate
+differences between any two groups, but in this example, differences
+between females and males in “answers to the Big Five Personality Test,
+constructed with items from the International Personality Item Pool”
+(dataset that can be obtained from <a href="https://openpsychometrics.org/" class="uri">https://openpsychometrics.org/</a>) are examined.</p>
+<p>The predictive approach as implemented with regularized methods
+allows for examination of group-membership probabilities and their
+distributions across individuals. In the context of statistical
+predictions of sex, these distributions are an updated variant to
+gender-typicality distributions used in gender diagnosticity methodology
+<a href="https://doi.org/10.1037/0022-3514.59.5.1051">(Lippa &amp;
+Connelly, 1990)</a>.</p>
+<p>For more details and empirical examples of the integration of
+multivariate sex difference estimation and gender diagnosticity
+methodology, see <a href="https://doi.org/10.1177/08902070221088155">Ilmarinen, Vainikainen,
+and Lönnqvist (2022)</a> and <a href="https://doi.org/10.1007/s11109-021-09681-2">Lönnqvist and
+Ilmarinen (2021)</a>.</p>
+<div id="preparations" class="section level1">
+<h1>Preparations</h1>
+<div id="packages" class="section level2">
+<h2>Packages</h2>
+<p>You can install the released version of <em>multid</em> from <a href="https://CRAN.R-project.org">CRAN</a> with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;multid&quot;</span>)</span></code></pre></div>
+<p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;vjilmari/multid&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rio)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multid)</span></code></pre></div>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>In this vignette, openly available data “Answers to the Big Five
+Personality Test, constructed with items from the International
+Personality Item Pool” from <a href="https://openpsychometrics.org" class="uri">https://openpsychometrics.org</a> will be used. The dataset
+is directly downloaded from the page (by this approach <a href="https://stackoverflow.com/a/66351588/8995170" class="uri">https://stackoverflow.com/a/66351588/8995170</a>) and
+therefore each step presented in the following script is fully
+reproducible starting from data download.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a temporary directory</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>td <span class="ot">&lt;-</span> <span class="fu">tempdir</span>()</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># create a temporary file</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>tf <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">tmpdir=</span>td, <span class="at">fileext=</span><span class="st">&quot;.zip&quot;</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># download file from internet into temporary location</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">&quot;http://openpsychometrics.org/_rawdata/BIG5.zip&quot;</span>, tf)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># list zip archive</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>file_names <span class="ot">&lt;-</span> <span class="fu">unzip</span>(tf, <span class="at">list=</span><span class="cn">TRUE</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># extract files from zip file</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(tf, <span class="at">exdir=</span>td, <span class="at">overwrite=</span><span class="cn">TRUE</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># use when zip file has only one file</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="fu">file.path</span>(td, <span class="st">&quot;BIG5/data.csv&quot;</span>))</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># delete the files and directories</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(td)</span></code></pre></div>
+<div id="variable-transformations" class="section level3">
+<h3>Variable transformations</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save names of personality items to a vector</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>per.items<span class="ot">&lt;-</span><span class="fu">names</span>(dat)[<span class="fu">which</span>(<span class="fu">names</span>(dat)<span class="sc">==</span><span class="st">&quot;E1&quot;</span>)<span class="sc">:</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">which</span>(<span class="fu">names</span>(dat)<span class="sc">==</span><span class="st">&quot;O10&quot;</span>)]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># code item response 0 (zero) to not available (NA) on all these items</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>dat[,per.items]<span class="ot">&lt;-</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(dat[,per.items],<span class="cf">function</span>(x){<span class="fu">ifelse</span>(x<span class="sc">==</span><span class="dv">0</span>,<span class="cn">NA</span>,x)})</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># check that the numerical range makes sense</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(dat[,per.items],<span class="at">na.rm=</span>T)</span></code></pre></div>
+<pre><code>#&gt; [1] 1 5</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate sum scores for Big Five (reverse coded items subtracted from 6)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># see codebook from https://openpsychometrics.org for item content and keys</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>N<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;N1&quot;</span>,<span class="st">&quot;N3&quot;</span>,<span class="st">&quot;N5&quot;</span>,<span class="st">&quot;N6&quot;</span>,<span class="st">&quot;N7&quot;</span>,<span class="st">&quot;N8&quot;</span>,<span class="st">&quot;N9&quot;</span>,<span class="st">&quot;N10&quot;</span>)],</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;N2&quot;</span>,<span class="st">&quot;N4&quot;</span>)]),<span class="at">na.rm=</span>T)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>E<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;E1&quot;</span>,<span class="st">&quot;E3&quot;</span>,<span class="st">&quot;E5&quot;</span>,<span class="st">&quot;E7&quot;</span>,<span class="st">&quot;E9&quot;</span>)],</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;E2&quot;</span>,<span class="st">&quot;E4&quot;</span>,<span class="st">&quot;E6&quot;</span>,<span class="st">&quot;E8&quot;</span>,<span class="st">&quot;E10&quot;</span>)]),<span class="at">na.rm=</span>T)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>O<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;O1&quot;</span>,<span class="st">&quot;O3&quot;</span>,<span class="st">&quot;O5&quot;</span>,<span class="st">&quot;O7&quot;</span>,<span class="st">&quot;O8&quot;</span>,<span class="st">&quot;O9&quot;</span>,<span class="st">&quot;O10&quot;</span>)],</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;O2&quot;</span>,<span class="st">&quot;O4&quot;</span>,<span class="st">&quot;O6&quot;</span>)]),<span class="at">na.rm=</span>T)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>A<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;A2&quot;</span>,<span class="st">&quot;A4&quot;</span>,<span class="st">&quot;A6&quot;</span>,<span class="st">&quot;A8&quot;</span>,<span class="st">&quot;A9&quot;</span>,<span class="st">&quot;A10&quot;</span>)],</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;A1&quot;</span>,<span class="st">&quot;A3&quot;</span>,<span class="st">&quot;A5&quot;</span>,<span class="st">&quot;A7&quot;</span>)]),<span class="at">na.rm=</span>T)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>C<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>,<span class="st">&quot;C3&quot;</span>,<span class="st">&quot;C5&quot;</span>,<span class="st">&quot;C7&quot;</span>,<span class="st">&quot;C9&quot;</span>,<span class="st">&quot;C10&quot;</span>)],</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;C2&quot;</span>,<span class="st">&quot;C4&quot;</span>,<span class="st">&quot;C6&quot;</span>,<span class="st">&quot;C8&quot;</span>)]),<span class="at">na.rm=</span>T)</span></code></pre></div>
+<p>For the purpose of this example, only US responses will be analyzed
+for sex differences. Furthermore, only participants who reported being
+male (gender=1) or female (gender=2), and who did not have any missing
+responses are included.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>US.dat<span class="ot">&lt;-</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>(dat[dat<span class="sc">$</span>country<span class="sc">==</span><span class="st">&quot;US&quot;</span> <span class="sc">&amp;</span> (dat<span class="sc">$</span>gender<span class="sc">==</span><span class="dv">1</span> <span class="sc">|</span> dat<span class="sc">$</span>gender<span class="sc">==</span><span class="dv">2</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">c</span>(<span class="st">&quot;gender&quot;</span>,per.items,<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>)])</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># code categorical gender variables</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>US.dat<span class="sc">$</span>gender.cat<span class="ot">&lt;-</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(US.dat<span class="sc">$</span>gender<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>)</span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="sex-differences" class="section level1">
+<h1>Sex differences</h1>
+<p>In this section, several different ways for estimating sex
+differences in personality are demonstrated. We start with typical
+univariate differences in the broad Big Five domains, followed by
+multivariate differences in both domains and using personality items as
+a multivariate set. Special attention is given to regularized methods
+because sex differences and the distributions underlying these mean
+differences can be both examined from this approach.</p>
+<div id="univariate-differences-in-trait-domain-sum-scores-using-the-d_pooled_sd--function" class="section level2">
+<h2>Univariate differences in trait domain sum scores using the
+d_pooled_sd -function</h2>
+<p><strong>d_pooled_sd</strong> -function is used to calculate Cohen’s
+<em>d</em> with pooled standard deviation across the male and female
+groups for each Big Five trait separately. The arguments include the
+analyzed Big Five trait (<strong>var</strong>), sex as the binary
+grouping variable (<strong>group.var</strong>), the values that
+represents these groups (<strong>group.values</strong>), and logical for
+whether statistical inferences is wanted (<strong>infer</strong>). All
+arguments except statistical inference are also included in the
+multivariate -function <strong>D_regularized</strong> presented further
+below.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>d.N<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;N&quot;</span>,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>d.E<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;E&quot;</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>d.O<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;O&quot;</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>d.A<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;A&quot;</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>d.C<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;C&quot;</span>,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co"># compile to a table</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>uni.d<span class="ot">&lt;-</span><span class="fu">rbind</span>(d.N,d.E,d.O,d.A,d.C)</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(uni.d)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(uni.d,<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>#&gt;   n.Male n.Female m.Male m.Female sd.Male sd.Female pooled.sd  diff     D
+#&gt; N   2945     5739   2.79     3.16    0.88      0.86      0.87 -0.37 -0.42
+#&gt; E   2945     5739   3.00     3.06    0.96      0.96      0.96 -0.07 -0.07
+#&gt; O   2945     5739   4.07     3.88    0.58      0.63      0.62  0.18  0.30
+#&gt; A   2945     5739   3.68     4.03    0.75      0.68      0.71 -0.35 -0.50
+#&gt; C   2945     5739   3.38     3.44    0.72      0.75      0.74 -0.07 -0.09
+#&gt;   t_stat      df p
+#&gt; N -18.45 5845.38 0
+#&gt; E  -3.09 5919.79 0
+#&gt; O  13.44 6458.37 0
+#&gt; A -21.33 5455.81 0
+#&gt; C  -3.95 6119.69 0</code></pre>
+<p>Column D indicates Cohen’s <em>d</em>. Females score higher in
+Neuroticism (N; <em>d</em> = -0.42) and Agreeableness (A; <em>d</em> =
+-0.50), while Males score higher in Openness (O; <em>d</em> = 0.30).
+Differences in Extraversion (E) and Conscientiousness (C), albeit
+statistically significant (<em>p</em> &lt; .001), seem negligible in
+magnitude (<em>d</em> &lt; |.10|) .</p>
+<p>The average absolute difference across the Big Five traits is
+therefore: <em>d</em> = 0.27. Importantly, this average absolute
+difference is not informative about the overall distance between males
+and females. One should use multivariate methods for examining questions
+regarding the overall distance in certain domain, like personality.</p>
+<p>Other columns in the output are:</p>
+<ul>
+<li><p>n.Male and n.Female = sample sizes</p></li>
+<li><p>m.Male and m.Female = mean levels</p></li>
+<li><p>sd.Male and sd.Female = standard deviations</p></li>
+<li><p>pooled.sd = pooled standard deviation</p></li>
+<li><p>diff = the raw (non-standardized) difference</p></li>
+<li><p>t_stat = t statistic</p></li>
+<li><p>df = Welch modified degrees of freedom</p></li>
+<li><p>p = p-value</p></li>
+</ul>
+</div>
+<div id="multivariate-difference-using-trait-sum-scores-as-variables" class="section level2">
+<h2>Multivariate difference using trait sum scores as variables</h2>
+<p>Although the univariate differences presented above estimate sex
+difference in each broad Big Five trait separately, these single Cohen’s
+<em>d</em> estimates do not provide a clear picture about the overall
+distance between males and females. Multivariate methods, using multiple
+variables and differences in these variables at the same, while
+accounting for their covariability (intercorrelations), should be used
+for understanding overall distances. These <em>D</em> values can be
+interpreted in the same way as Cohen’s <em>d</em>, i.e., standardized
+distances between males and females.</p>
+<div id="mahalanobis-d" class="section level3">
+<h3>Mahalanobis’ <em>D</em></h3>
+<p>Mahalanobis’ <em>D</em> is the standardized distance between the Male
+and Female group centroids in multivariate space. For calculation of
+Mahalanobis’ <em>D</em>, correlation matrix of the multivariate set and
+vectors of standardized mean differences are needed. The ordering of the
+variables should be same in these inputs.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># let&#39;s use the previously obtained univariate d-values</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>d_vector<span class="ot">&lt;-</span>uni.d[,<span class="st">&quot;D&quot;</span>]</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate intercorrelations</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>cor_mat<span class="ot">&lt;-</span><span class="fu">cor</span>(US.dat[,<span class="fu">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>)])</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># test that the ordering of these variables matches</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(d_vector)<span class="sc">==</span><span class="fu">colnames</span>(cor_mat)</span></code></pre></div>
+<pre><code>#&gt; [1] TRUE TRUE TRUE TRUE TRUE</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print the correlation matrix</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(cor_mat,<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>#&gt;       N     E     O     A     C
+#&gt; N  1.00 -0.25 -0.10 -0.10 -0.26
+#&gt; E -0.25  1.00  0.15  0.31  0.10
+#&gt; O -0.10  0.15  1.00  0.10  0.05
+#&gt; A -0.10  0.31  0.10  1.00  0.17
+#&gt; C -0.26  0.10  0.05  0.17  1.00</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate D</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>D_maha<span class="ot">&lt;-</span><span class="fu">sqrt</span>(<span class="fu">t</span>(d_vector) <span class="sc">%*%</span> <span class="fu">solve</span>(cor_mat) <span class="sc">%*%</span> d_vector)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>D_maha</span></code></pre></div>
+<pre><code>#&gt;           [,1]
+#&gt; [1,] 0.7681502</code></pre>
+<p>Mahalanobis’ <em>D</em> is, of course, larger than any of the
+univariate <em>d</em>’s for single variables, here the standardized
+distance between the group centroids of males and females in the
+multivariate space is <em>D</em> = 0.77</p>
+</div>
+<div id="regularized-d-with-d_regularized--function" class="section level3">
+<h3>Regularized <em>D</em> with D_regularized -function</h3>
+<p>Regularized variant of <em>D</em> is calculated using a predictive
+approach whereby the binary sex-variable is predicted by the
+multivariate variable set with regularized logistic regression. The
+predicted values for each individual are indicative of logits of
+probabilities of being a male or female.</p>
+<p>These femininity-masculinity scores (FM) can be used in similar ways
+to any other variable to calculate standardized distances between mean
+FM of Males and mean FM of females with pooled standard deviations.
+Beyond estimation of mean differences, there are many other interesting
+features that can be informative of the multivariate/FM
+distributions.</p>
+<p>In the <strong>D_regularized</strong> -function, separate partitions
+of the original data are used for regulation (i.e., training) and
+prediction (i.e., testing). Regularization means that the
+beta-coefficients for variables in the multivariate set are penalized
+through a specified function (here, a default elastic net penalty with
+10-fold cross-validation is used). After this, the obtained coefficients
+weights are used in the prediction part of the data as measures of FM
+for each individual. Argument <strong>out</strong> (logical, meaning are
+predictions made “out-of-bag”) and <strong>size</strong> (size of the
+training partition of the data, equal for males and females) are used
+for informing the function that a partition is wanted. The multivariate
+set is supplied with <strong>mv.vars</strong> -argument.</p>
+<p>By requesting, it is possible to calculate <strong>pcc</strong>
+(probability of correctly classified), <strong>auc</strong> (area under
+the receiver operating characteristics), and also frequencies indicating
+the proportions of the sample that fall within certain cutoffs of
+predicted probabilities from 0 to 1 for each group
+(<strong>pred.prob</strong>).</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed number for reproducibility</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">37127</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># decide the size of the regularization (training data fold)</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># here, half of the smaller of the male and female groups is used</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>size<span class="ot">=</span><span class="fu">round</span>(<span class="fu">min</span>(<span class="fu">table</span>(US.dat<span class="sc">$</span>gender.cat))<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># run D_regularized</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>D_out<span class="ot">&lt;-</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">D_regularized</span>(<span class="at">data=</span>US.dat,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">mv.vars=</span><span class="fu">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>),</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">group.var=</span><span class="st">&quot;gender.cat&quot;</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>                <span class="at">out =</span> T,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">size=</span>size,</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>                <span class="at">pcc =</span> T,</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">auc =</span> T,</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">pred.prob =</span> T)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="co"># print the output</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(D_out<span class="sc">$</span>D,<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>#&gt;      n.Male n.Female m.Male m.Female sd.Male sd.Female pooled.sd diff    D
+#&gt; [1,]   1473     4267   0.34     -0.3    0.86      0.79      0.81 0.64 0.79
+#&gt;      pcc.Male pcc.Female pcc.total  auc
+#&gt; [1,]     0.63       0.67      0.66 0.71</code></pre>
+<p>From the output, we see that the sample sizes are smaller as compared
+to univariate estimates, because the sample sizes are only indicative of
+the samples in prediction/testing dataset.</p>
+<p>Standardized multivariate difference between males and females was
+estimated at <em>D</em> = 0.79. Very similar sex difference estimate to
+Mahalanobis’ <em>D</em>.</p>
+<p>There are additional features in this output that might be of
+interest. Similarly to univariate <em>d</em> estimates, we get
+descriptive statistics for both groups on FM-score metric, as well as an
+estimate of pooled estimate of standard deviation that is also used for
+calculation of D. <strong>pcc</strong> indicates probability of
+correctly classified individuals, and <strong>auc</strong> is the area
+under the receiver operating characteristics. These are both commonly
+used indices of predictive performance. In this exemplary case, the
+performance of broad Big Five domains in predicting sex. Detailing
+predicted probabilities of being a male across certain cutoffs (defaults
+were used in this example) for both groups can be obtained from
+<strong>P.table</strong> part of the output:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span>D_out<span class="sc">$</span>P.table,<span class="dv">1</span>)</span></code></pre></div>
+<pre><code>#&gt;         
+#&gt;          [0,0.2) [0.2,0.4) [0.4,0.6) [0.6,0.8) [0.8,1]
+#&gt;   Female     7.2      39.0      37.0      14.1     2.7
+#&gt;   Male       1.2      18.1      37.1      32.6    11.0</code></pre>
+<p>From this table we see that majority of males are nevertheless not
+very clearly classified as males based on the Big Five personality
+traits (11% in .80-1 range), and same is true for classifying females as
+females (7% in 0-0.20 range).</p>
+<div id="overlap" class="section level4">
+<h4>Overlap</h4>
+<p>The same pattern can also be observed from visually inspecting the
+distributions of the FM-scores, and assessing the
+<strong>overlap</strong> between the distributions of FM-scores of males
+and females.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the D-estimate</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>D<span class="ot">&lt;-</span><span class="fu">unname</span>(D_out<span class="sc">$</span>D[,<span class="st">&quot;D&quot;</span>])</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Overlap relative to a single distribution (OVL)</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>OVL<span class="ot">&lt;-</span><span class="dv">2</span><span class="sc">*</span><span class="fu">pnorm</span>((<span class="sc">-</span>D<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Proportion of overlap relative to the joint distribution</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>OVL2<span class="ot">&lt;-</span>OVL<span class="sc">/</span>(<span class="dv">2</span><span class="sc">-</span>OVL)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># non-parametric overlap with overlapping package</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(overlapping)</span></code></pre></div>
+<pre><code>#&gt; Loading required package: ggplot2</code></pre>
+<pre><code>#&gt; Loading required package: testthat</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>np.overlap<span class="ot">&lt;-</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">overlap</span>(<span class="at">x =</span> <span class="fu">list</span>(D_out<span class="sc">$</span>pred.dat[</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  D_out<span class="sc">$</span>pred.dat<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Male&quot;</span>,<span class="st">&quot;pred&quot;</span>],</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  D_out<span class="sc">$</span>pred.dat[</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  D_out<span class="sc">$</span>pred.dat<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Female&quot;</span>,<span class="st">&quot;pred&quot;</span>]),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot=</span>T)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this corresponds to Proportion of overlap relative to the joint distribution (OVL2)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>np.OVL2<span class="ot">&lt;-</span><span class="fu">unname</span>(np.overlap<span class="sc">$</span>OV)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># from which Proportion of overlap relative to a single distribution (OVL) is approximated at</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>np.OVL<span class="ot">&lt;-</span>(<span class="dv">2</span><span class="sc">*</span>np.OVL2)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span>np.OVL2)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># comparison of different overlap-estimates</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(OVL,np.OVL,OVL2,np.OVL2),<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>#&gt;       OVL np.OVL OVL2 np.OVL2
+#&gt; [1,] 0.69    0.7 0.53    0.54</code></pre>
+<p>In this example, the non-parametric overlap (np) estimates to these
+logistic distributions are almost identical to the parametric overlap
+estimates.</p>
+</div>
+<div id="bootstrap-confidence-intervals-for-regularized-d" class="section level4">
+<h4>Bootstrap confidence intervals for Regularized <em>D</em></h4>
+<p>To obtain confidence intervals for <em>D</em>-estimates in the
+regularized techniques, a bootstrap approach can be used whereby
+<em>D</em> is estimated with multiple redrawn bootstrap samples from the
+original sample and using the distribution of these <em>D</em> values
+for constructing a percentile confidence interval around the estimate.
+In this example, we take only 10 redraws with replacement, but in
+reality one should take at least 1000 or 5000.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># number of redraws</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>reps<span class="ot">=</span><span class="dv">10</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># placeholder for D-estimates</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>D_out_boot<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="cn">NA</span>,reps)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># repeat the procedure to obtain a distribution</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>t1<span class="ot">&lt;-</span><span class="fu">Sys.time</span>()</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>reps){</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># draw replaced samples with the same size as the original data</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  boot.dat<span class="ot">&lt;-</span><span class="fu">sample</span>(US.dat,<span class="at">size=</span><span class="fu">nrow</span>(US.dat),<span class="at">replace=</span>T)</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># run D_regularized for each sample</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  D_out_boot[i]<span class="ot">&lt;-</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">D_regularized</span>(<span class="at">data=</span>boot.dat,</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">mv.vars=</span><span class="fu">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>),</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.var=</span><span class="st">&quot;gender.cat&quot;</span>,</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">out =</span> T,</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>              <span class="at">size=</span>size)<span class="sc">$</span>D[,<span class="st">&quot;D&quot;</span>]</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>t2<span class="ot">&lt;-</span><span class="fu">Sys.time</span>()</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>t2<span class="sc">-</span>t1</span></code></pre></div>
+<pre><code>#&gt; Time difference of 25.29923 secs</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print 95% CI percentile interval</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">quantile</span>(D_out_boot,<span class="fu">c</span>(.<span class="dv">025</span>,.<span class="dv">975</span>)),<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>#&gt;  2.5% 97.5% 
+#&gt;  0.78  0.83</code></pre>
+<p>Thus, it can be reported that the multivariate sex difference
+<em>D</em> = 0.79, 95% CI [0.78, 0.83].</p>
+</div>
+</div>
+</div>
+<div id="multivariate-difference-using-item-scores-as-variables" class="section level2">
+<h2>Multivariate difference using item scores as variables</h2>
+<p>Recently there have been multiple studies in the field of personality
+psychology highlighting the importance of narrow personality traits,
+also in terms of their ability to predict criteria over and above the
+more commonly used broad trait domains, such as Big Five <a href="https://doi.org/10.1002/per.2147">(e.g., Seeboth &amp; Mõttus,
+2018)</a>. These narrow personality traits are usually either facets or
+nuances that are commonly modeled as being part of a certain Big Five
+trait, although their unique predictive utility suggests that they have
+trait-like properties (stability, cross-informant agreement etc.) that
+go beyond the broad Big Five domains <a href="https://psycnet.apa.org/record/2018-35082-001">(e.g., Mõttus et
+al., 2019)</a>. That is, the narrower traits can be considered unique
+traits as well. It is therefore interesting to see whether the item
+scores as the variable set in multivariate estimation would also better
+predictions of sex, and different estimates of sex differences <a href="https://doi.org/10.1177/08902070221088155">(see Ilmarinen et al.,
+2022)</a>.</p>
+<p>Because the number of the variables is increased (from five to fifty
+in this dataset), the use of regularization methods and different data
+partitions for training and testing are strongly recommended to avoid
+overfitting the data (for illustrative purposes, Mahalanobis’ <em>D</em>
+is also be calculated below).</p>
+<div id="mahalanobis-d-1" class="section level3">
+<h3>Mahalanobis’ <em>D</em></h3>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># place-holder vector for univariate Cohen d&#39;s for items</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>d_vector_items<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="cn">NA</span>,<span class="fu">length</span>(per.items))</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># loop through the items and obtain d for each item</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(per.items)){</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  d_vector_items[i]<span class="ot">&lt;-</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">d_pooled_sd</span>(<span class="at">data=</span>US.dat,</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">var=</span>per.items[i],</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.var=</span><span class="st">&quot;gender.cat&quot;</span>,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.values=</span><span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>))[,<span class="st">&quot;D&quot;</span>]</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>cor_mat_items<span class="ot">&lt;-</span><span class="fu">cor</span>(US.dat[,per.items])</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate D</span></span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>D_maha_items<span class="ot">&lt;-</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(<span class="fu">t</span>(d_vector_items) <span class="sc">%*%</span> <span class="fu">solve</span>(cor_mat_items) <span class="sc">%*%</span> d_vector_items)</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>D_maha_items</span></code></pre></div>
+<pre><code>#&gt;           [,1]
+#&gt; [1,] 0.9212846</code></pre>
+<p>Item-based Mahalanobis’ <em>D</em> is somewhat larger that any of
+those based on Big Five domains. The standardized distance between the
+group centroids of males and females in a space comprised of personality
+items is <em>D</em> = 0.92</p>
+</div>
+<div id="regularized-d-with-d_regularized--function-1" class="section level3">
+<h3>Regularized <em>D</em> with D_regularized -function</h3>
+<p>It is straightforward to use D_regularized -function even with large
+variable sets (especially when the variable names are save in a vector
+first). Using separate fold for regularization and prediction for items.
+Domain-based results are printed for comparison.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>D_items_out<span class="ot">&lt;-</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">D_regularized</span>(<span class="at">data=</span>US.dat,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">mv.vars=</span>per.items,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.var=</span><span class="st">&quot;gender.cat&quot;</span>,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">out =</span> T,</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">size=</span>size,<span class="at">pcc =</span> T,<span class="at">auc =</span> T,<span class="at">pred.prob =</span> T)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Item-based D</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(D_items_out<span class="sc">$</span>D,<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>#&gt;      n.Male n.Female m.Male m.Female sd.Male sd.Female pooled.sd diff    D
+#&gt; [1,]   1473     4267   0.46    -0.46       1      0.95      0.96 0.92 0.96
+#&gt;      pcc.Male pcc.Female pcc.total  auc
+#&gt; [1,]     0.66       0.71      0.69 0.75</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Big Five domain-based D</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(D_out<span class="sc">$</span>D,<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>#&gt;      n.Male n.Female m.Male m.Female sd.Male sd.Female pooled.sd diff    D
+#&gt; [1,]   1473     4267   0.34     -0.3    0.86      0.79      0.81 0.64 0.79
+#&gt;      pcc.Male pcc.Female pcc.total  auc
+#&gt; [1,]     0.63       0.67      0.66 0.71</code></pre>
+<p>With items as the multivariate set, <em>D</em> = 0.96 is slightly
+larger than with Big Five trait domains, <em>D</em> = 0.79.</p>
+<p>Differences in predictive performance can also be illustrated from
+comparing the predicted probabilities.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span>D_items_out<span class="sc">$</span>P.table,<span class="dv">1</span>)</span></code></pre></div>
+<pre><code>#&gt;         
+#&gt;          [0,0.2) [0.2,0.4) [0.4,0.6) [0.6,0.8) [0.8,1]
+#&gt;   Female    15.9      37.8      29.4      13.7     3.3
+#&gt;   Male       1.9      17.9      31.4      31.1    17.7</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span>D_out<span class="sc">$</span>P.table,<span class="dv">1</span>)</span></code></pre></div>
+<pre><code>#&gt;         
+#&gt;          [0,0.2) [0.2,0.4) [0.4,0.6) [0.6,0.8) [0.8,1]
+#&gt;   Female     7.2      39.0      37.0      14.1     2.7
+#&gt;   Male       1.2      18.1      37.1      32.6    11.0</code></pre>
+<p>We see that there are more people in the extremes, but based on the
+pcc and auc -values printed above, the overall predictive performance is
+not drastically improved. A large proportion (more than 30%) of the data
+is still classified in the 40%-60% range, meaning their personality
+profiles are rather indifferent in regards to sex.</p>
+<div id="overlap-1" class="section level4">
+<h4>Overlap</h4>
+<p>Overlaps give similar information but in another format:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the D-estimate</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>D_items<span class="ot">&lt;-</span><span class="fu">unname</span>(D_items_out<span class="sc">$</span>D[,<span class="st">&quot;D&quot;</span>])</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Overlap relative to a single distribution (OVL)</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>OVL_items<span class="ot">&lt;-</span><span class="dv">2</span><span class="sc">*</span><span class="fu">pnorm</span>((<span class="sc">-</span>D_items<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Proportion of overlap relative to the joint distribution</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>OVL2_items<span class="ot">&lt;-</span>OVL_items<span class="sc">/</span>(<span class="dv">2</span><span class="sc">-</span>OVL_items)</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="co"># non-parametric overlap</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>np.overlap_items<span class="ot">&lt;-</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">overlap</span>(<span class="at">x =</span> <span class="fu">list</span>(D_items_out<span class="sc">$</span>pred.dat[</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  D_items_out<span class="sc">$</span>pred.dat<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Male&quot;</span>,<span class="st">&quot;pred&quot;</span>],</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  D_items_out<span class="sc">$</span>pred.dat[</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>  D_items_out<span class="sc">$</span>pred.dat<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Female&quot;</span>,<span class="st">&quot;pred&quot;</span>]),</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot=</span>T)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this corresponds to Proportion of overlap relative to the joint distribution (OVL2)</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>np.OVL2_items<span class="ot">&lt;-</span><span class="fu">unname</span>(np.overlap_items<span class="sc">$</span>OV)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># from which Proportion of overlap relative to a single distribution (OVL) is approximated at</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>np.OVL_items<span class="ot">&lt;-</span>(<span class="dv">2</span><span class="sc">*</span>np.OVL2_items)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span>np.OVL2_items)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co"># compare the different overlap-estimates</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(OVL_items,np.OVL_items,</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>            OVL2_items,np.OVL2_items),<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>#&gt;      OVL_items np.OVL_items OVL2_items np.OVL2_items
+#&gt; [1,]      0.63         0.65       0.46          0.48</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print Big Five domain based overlaps for comparison</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(OVL,np.OVL,OVL2,np.OVL2),<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>#&gt;       OVL np.OVL OVL2 np.OVL2
+#&gt; [1,] 0.69    0.7 0.53    0.54</code></pre>
+<p>There overlap between FM-distributions of males and females is
+somewhat smaller when individual items are used as the multivariate set
+rather than broad Big Five domains.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<p><a href="https://doi.org/10.1177/08902070221088155">Ilmarinen, V. J.,
+Vainikainen, M. P., &amp; Lönnqvist, J. E. (2022). Is there a g-factor
+of genderedness? Using a continuous measure of genderedness to assess
+sex differences in personality, values, cognitive ability, school
+grades, and educational track. <em>European Journal of
+Personality</em>.</a></p>
+<p><a href="https://doi.org/10.1037/0022-3514.59.5.1051">Lippa, R. A.,
+&amp; Connelly, S. (1990). Gender diagnosticity: A new Bayesian approach
+to gender-related individual differences. <em>Journal of Personality and
+Social Psychology, 59</em>(5), 1051–1065.</a></p>
+<p><a href="https://doi.org/10.1007/s11109-021-09681-2">Lönnqvist, J.
+E., &amp; Ilmarinen, V. J. (2021). Using a continuous measure of
+genderedness to assess sex differences in the attitudes of the political
+elite. <em>Political Behavior, 43</em>, 1779–1800.</a></p>
+<p><a href="https://doi.org/10.1037/pspp0000202">Mõttus, R., Sinick, J.,
+Terracciano, A., Hřebíčková, M., Kandler, C., Ando, J., Mortensen, E.
+L., Colodro-Conde, L., &amp; Jang, K. L. (2019). Personality
+characteristics below facets: A replication and meta-analysis of
+cross-rater agreement, rank-order stability, heritability, and utility
+of personality nuances. <em>Journal of Personality and Social
+Psychology, 117</em>(4), 35–50.</a></p>
+<p><a href="https://doi.org/10.1002/per.2147">Seeboth, A., &amp; Mõttus,
+R. (2018). Successful explanations start with accurate descriptions:
+Questionnaire items as personality markers for more accurate
+predictions. <em>European Journal of Personality, 32</em>(3),
+186—201.</a></p>
+</div>
+<div id="session-information" class="section level1">
+<h1>Session Information</h1>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<pre><code>#&gt; R version 4.2.0 (2022-04-22 ucrt)
+#&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)
+#&gt; Running under: Windows 10 x64 (build 19043)
+#&gt; 
+#&gt; Matrix products: default
+#&gt; 
+#&gt; locale:
+#&gt; [1] LC_COLLATE=C                     LC_CTYPE=Finnish_Finland.utf8   
+#&gt; [3] LC_MONETARY=Finnish_Finland.utf8 LC_NUMERIC=C                    
+#&gt; [5] LC_TIME=Finnish_Finland.utf8    
+#&gt; 
+#&gt; attached base packages:
+#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     
+#&gt; 
+#&gt; other attached packages:
+#&gt; [1] overlapping_1.7 testthat_3.1.4  ggplot2_3.3.5   multid_0.6.0   
+#&gt; [5] rio_0.5.29     
+#&gt; 
+#&gt; loaded via a namespace (and not attached):
+#&gt;  [1] Rcpp_1.0.8.3      lattice_0.20-45   glmnet_4.1-4      digest_0.6.29    
+#&gt;  [5] foreach_1.5.2     utf8_1.2.2        R6_2.5.1          cellranger_1.1.0 
+#&gt;  [9] plyr_1.8.7        evaluate_0.15     highr_0.9         pillar_1.7.0     
+#&gt; [13] rlang_1.0.2       curl_4.3.2        readxl_1.4.0      rstudioapi_0.13  
+#&gt; [17] data.table_1.14.2 jquerylib_0.1.4   Matrix_1.4-1      rmarkdown_2.14   
+#&gt; [21] labeling_0.4.2    splines_4.2.0     stringr_1.4.0     foreign_0.8-82   
+#&gt; [25] munsell_0.5.0     compiler_4.2.0    xfun_0.30         pkgconfig_2.0.3  
+#&gt; [29] shape_1.4.6       htmltools_0.5.2   tidyselect_1.1.2  tibble_3.1.7     
+#&gt; [33] codetools_0.2-18  fansi_1.0.3       crayon_1.5.1      dplyr_1.0.9      
+#&gt; [37] withr_2.5.0       brio_1.1.3        grid_4.2.0        jsonlite_1.8.0   
+#&gt; [41] gtable_0.3.0      lifecycle_1.0.1   magrittr_2.0.3    pROC_1.18.0      
+#&gt; [45] scales_1.2.0      zip_2.2.0         cli_3.3.0         stringi_1.7.6    
+#&gt; [49] farver_2.1.0      bslib_0.3.1       ellipsis_0.3.2    generics_0.1.2   
+#&gt; [53] vctrs_0.4.1       openxlsx_4.2.5    iterators_1.0.14  tools_4.2.0      
+#&gt; [57] forcats_0.5.1     glue_1.6.2        purrr_0.3.4       hms_1.1.1        
+#&gt; [61] fastmap_1.1.0     survival_3.3-1    yaml_2.3.5        colorspace_2.0-3 
+#&gt; [65] knitr_1.39        haven_2.5.0       sass_0.4.1</code></pre>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

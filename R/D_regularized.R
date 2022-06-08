@@ -17,6 +17,7 @@
 #' @param auc Logical. Include area under the receiver operating characteristics? Default FALSE.
 #' @param pred.prob Logical. Include table of predicted probabilities? Default FALSE.
 #' @param prob.cutoffs Vector. Cutoffs for table of predicted probabilities. Default seq(0,1,0.20).
+#' @param append.data Logical. If TRUE, the data is appended to the predicted variables.
 #' @return
 #' \item{D}{Multivariate descriptive statistics and differences.}
 #' \item{pred.dat}{A data.frame with predicted values.}
@@ -95,7 +96,8 @@ D_regularized <-
            pcc = FALSE,
            auc = FALSE,
            pred.prob = FALSE,
-           prob.cutoffs = seq(0, 1, 0.20)) {
+           prob.cutoffs = seq(0, 1, 0.20),
+           append.data = FALSE) {
 
     # out-of-bag and folds (fold_out)?
     if (out & fold) {
@@ -113,7 +115,8 @@ D_regularized <-
         pcc = pcc,
         auc = auc,
         pred.prob = pred.prob,
-        prob.cutoffs = prob.cutoffs
+        prob.cutoffs = prob.cutoffs,
+        append.data = append.data
       )
     } # out-of-bag and no folds (out)?
     else if (out & !fold) {
@@ -130,7 +133,8 @@ D_regularized <-
         pcc = pcc,
         auc = auc,
         pred.prob = pred.prob,
-        prob.cutoffs = prob.cutoffs
+        prob.cutoffs = prob.cutoffs,
+        append.data = append.data
       )
     } # not out-of-bag and folds (fold)?
     else if (!out & fold) {
@@ -143,7 +147,8 @@ D_regularized <-
         s = s,
         type.measure = type.measure,
         rename.output = rename.output,
-        fold.var = fold.var
+        fold.var = fold.var,
+        append.data = append.data
       )
     } # vanilla version
     else {
@@ -155,7 +160,8 @@ D_regularized <-
         alpha = alpha,
         s = s,
         type.measure = type.measure,
-        rename.output = rename.output
+        rename.output = rename.output,
+        append.data = append.data
       )
     }
   }

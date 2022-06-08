@@ -13,7 +13,8 @@ D_regularized_vanilla(
   nfolds = 10,
   s = "lambda.min",
   type.measure = "deviance",
-  rename.output = TRUE
+  rename.output = TRUE,
+  append.data = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ D_regularized_vanilla(
 \item{type.measure}{Which measure is used during cross-validation. Default "deviance".}
 
 \item{rename.output}{Logical. Should the output values be renamed according to the group.values? Default TRUE.}
+
+\item{append.data}{Logical. If TRUE, the original data is appended to the predicted variables.}
 }
 \value{
 \item{D}{Multivariate descriptive statistics and differences.}

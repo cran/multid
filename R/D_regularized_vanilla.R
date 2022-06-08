@@ -9,6 +9,7 @@
 #' @param s Which lambda value is used for predicted values? Either "lambda.min" (default) or "lambda.1se".
 #' @param type.measure Which measure is used during cross-validation. Default "deviance".
 #' @param rename.output Logical. Should the output values be renamed according to the group.values? Default TRUE.
+#' @param append.data Logical. If TRUE, the original data is appended to the predicted variables.
 #'
 #' @return
 #' \item{D}{Multivariate descriptive statistics and differences.}
@@ -31,7 +32,8 @@ D_regularized_vanilla <-
            nfolds = 10,
            s = "lambda.min",
            type.measure = "deviance",
-           rename.output = TRUE) {
+           rename.output = TRUE,
+           append.data = FALSE) {
     data$group.var.num <-
       ifelse(data[, group.var] == group.values[1], 1,
         ifelse(data[, group.var] == group.values[2], 0,
@@ -58,6 +60,10 @@ D_regularized_vanilla <-
         )
       )
     )
+
+    if (append.data) {
+      preds <- cbind(preds, data)
+    }
 
     D <- multid::d_pooled_sd(
       data = preds,

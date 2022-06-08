@@ -5,16 +5,19 @@
 
 <!-- badges: start -->
 
-[![Travis build
-status](https://app.travis-ci.com/vjilmari/multid.svg?branch=main)](https://app.travis-ci.com/vjilmari/multid/)
+[![CRAN
+version](https://www.r-pkg.org/badges/version-ago/multid)](https://www.r-pkg.org/badges/version-ago/multid)
+
+[![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/multid)](https://cranlogs.r-pkg.org/badges/grand-total/multid)
 
 <!-- badges: end -->
 
-multid provides tools for regularized measurement of multivariate
+*multid* provides tools for regularized measurement of multivariate
 differences between two groups (e.g., sex differences). Regularization
 via logistic regression variants enables inclusion of large number of
 correlated variables in the multivariate set while providing k-fold
-cross-validation and regularization to avoid overfitting.
+cross-validation and regularization to avoid overfitting
+(**D_regularized** -function).
 
 Predictive approach as implemented with regularized methods also allows
 for examination of group-membership probabilities and their
@@ -36,14 +39,37 @@ Studies in which these methods have been used:
     cognitive ability, school grades, and educational track. *European
     Journal of Personality*.](https://doi.org/10.1177/08902070221088155)
 
-In addition, multid also includes functions for testing hypothesis that
-consider predicting algebraic difference scores. A joint test that
+*multid* also includes functions for testing hypothesis that consider
+predicting algebraic difference scores as variables. A joint test that
 focuses on the regression coefficients on the difference score
 components (minuend and subtrahend) is provided in the structural
-equation modeling framework (sem_dadas) and multilevel models
-(ml_dadas). Difference between Absolute Difference and Absolute Sum of
-the regression coefficients (DADAS) is used for direct test of whether
-the coefficients can be interpreted as predicting a difference score.
+equation modeling framework (**sem_dadas**) and multilevel models
+(**ml_dadas**). Difference between Absolute Difference and Absolute Sum
+of the regression coefficients (DADAS) is used for direct test of
+whether the coefficients can be interpreted as predicting a difference
+score.
+
+In addition, *multid* includes various helper functions:
+
+-   Calculation of variance partition coefficient (i.e., intraclass
+    correlation, ICC) with **vpc_at** -function at different levels of
+    lower-level predictors in two-level model including random slope
+    ([Goldstein et al.,
+    2002](https://doi.org/10.1207/S15328031US0104_02))
+
+-   Calculation of coefficient of variance variation and standardized
+    variance heterogeneity, either with manual input of estimates
+    (**cvv_manual**) or directly from data (**cvv**) ([Ruscio & Roche,
+    2012](https://doi.org/10.1027/1614-2241/a000034))
+
+-   Calculation of reliability of difference score variable that is a
+    difference between two mean values (e.g., difference between men and
+    women across countries) by using ICC2 reliability estimates
+    ([Bliese, 2000](https://psycnet.apa.org/record/2000-16936-008)) as
+    inputs in the equation for difference score reliability ([Johns,
+    1981](https://doi.org/10.1016/0030-5073(81)90033-7)). Can be
+    calculated from long format data file or from lmer-fitted two-level
+    model with **reliability_dms** -function.
 
 ## Installation
 

@@ -22,7 +22,9 @@
 #'
 #' @export
 #'
-#' @examples set.seed(342356)
+#' @examples
+#' \dontrun{
+#' set.seed(342356)
 #' d <- data.frame(
 #'   var1 = rnorm(50),
 #'   var2 = rnorm(50),
@@ -32,6 +34,7 @@
 #'   data = d, var1 = "var1", var2 = "var2",
 #'   predictor = "x", center = TRUE, scale = TRUE
 #' )$results
+#' }
 sem_dadas <- function(data,
                       var1,
                       var2,

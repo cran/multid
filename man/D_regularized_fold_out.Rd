@@ -18,7 +18,8 @@ D_regularized_fold_out(
   pcc = FALSE,
   auc = FALSE,
   pred.prob = FALSE,
-  prob.cutoffs = seq(from = 0, to = 1, by = 0.2)
+  prob.cutoffs = seq(from = 0, to = 1, by = 0.2),
+  append.data = FALSE
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ D_regularized_fold_out(
 \item{pred.prob}{Logical. Include table of predicted probabilities? Default FALSE.}
 
 \item{prob.cutoffs}{Vector. Cutoffs for table of predicted probabilities. Default seq(0,1,0.20).}
+
+\item{append.data}{Logical. If TRUE, the testing data split is appended to the predicted variables.}
 }
 \value{
 \item{D}{Multivariate descriptive statistics and differences.}

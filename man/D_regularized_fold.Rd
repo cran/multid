@@ -13,7 +13,8 @@ D_regularized_fold(
   s = "lambda.min",
   type.measure = "deviance",
   rename.output = TRUE,
-  fold.var
+  fold.var,
+  append.data = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ D_regularized_fold(
 \item{rename.output}{Logical. Should the output values be renamed according to the group.values? Default TRUE.}
 
 \item{fold.var}{Character string. Name of the fold variable.}
+
+\item{append.data}{Logical. If TRUE, the original data is appended to the predicted variables.}
 }
 \value{
 \item{D}{Multivariate descriptive statistics and differences.}
