@@ -20,7 +20,7 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 This vignette details the procedures by which multivariate sex differences in personality traits can be estimated by using regularized logistic regression and gender diagnosticity approach with *multid* package.
 
-This approach can be used for regularized measurement of multivariate differences between any two groups, but in this example, differences between females and males in "answers to the Big Five Personality Test, constructed with items from the International Personality Item Pool"  (dataset that can be obtained from <https://openpsychometrics.org/>) are examined.
+This approach can be used for regularized measurement of multivariate differences between any two groups, but in this example, differences between females and males in "answers to the Big Five Personality Test, constructed with items from the International Personality Item Pool" (dataset that can be obtained from <https://openpsychometrics.org/>) are examined.
 
 The predictive approach as implemented with regularized methods allows for examination of group-membership probabilities and their distributions across individuals. In the context of statistical predictions of sex, these distributions are an updated variant to gender-typicality distributions used in gender diagnosticity methodology [(Lippa & Connelly, 1990)](https://doi.org/10.1037/0022-3514.59.5.1051).
 
@@ -43,14 +43,18 @@ install.packages("devtools")
 devtools::install_github("vjilmari/multid")
 ```
 
-```{r setup}
+Load multid and other packages needed for the vignette
+
+```{r setup,warning = FALSE, message = FALSE}
 library(rio)
 library(multid)
+library(dplyr)
+library(overlapping)
 ```
 
 ## Data
 
-In this vignette, openly available data "Answers to the Big Five Personality Test, constructed with items from the International Personality Item Pool" from <https://openpsychometrics.org> will be used. The dataset is directly downloaded from the page (by this approach <https://stackoverflow.com/a/66351588/8995170>) and therefore each step presented in the following script is fully reproducible starting from data download.
+In this vignette, openly available data "Answers to the Big Five Personality Test, constructed with items from the International Personality Item Pool". The dataset is directly downloaded from <https://openpsychometrics.org> (by approach presented here <https://stackoverflow.com/a/66351588/8995170>) and there is no need to download it to your drive to reproduce the following analyses.
 
 ```{r importdata}
 # create a temporary directory
@@ -78,18 +82,15 @@ unlink(td)
 ### Variable transformations
 
 ```{r}
-
 # save names of personality items to a vector
 per.items<-names(dat)[which(names(dat)=="E1"):
                         which(names(dat)=="O10")]
 
 # code item response 0 (zero) to not available (NA) on all these items
-
 dat[,per.items]<-
   sapply(dat[,per.items],function(x){ifelse(x==0,NA,x)})
 
 # check that the numerical range makes sense
-
 range(dat[,per.items],na.rm=T)
 
 # calculate sum scores for Big Five (reverse coded items subtracted from 6)
@@ -253,7 +254,7 @@ round(D_out$D,2)
 
 From the output, we see that the sample sizes are smaller as compared to univariate estimates, because the sample sizes are only indicative of the samples in prediction/testing dataset.
 
-Standardized multivariate difference between males and females was estimated at *D* = `r round(D_out$D[,"D"],2)`. Very similar sex difference estimate to Mahalanobis' *D*. 
+Standardized multivariate difference between males and females was estimated at *D* = `r round(D_out$D[,"D"],2)`. Very similar in magnitude to multivariate sex difference indexed by Mahalanobis' *D*.
 
 There are additional features in this output that might be of interest. Similarly to univariate *d* estimates, we get descriptive statistics for both groups on FM-score metric, as well as an estimate of pooled estimate of standard deviation that is also used for calculation of D. **pcc** indicates probability of correctly classified individuals, and **auc** is the area under the receiver operating characteristics. These are both commonly used indices of predictive performance. In this exemplary case, the performance of broad Big Five domains in predicting sex. Detailing predicted probabilities of being a male across certain cutoffs (defaults were used in this example) for both groups can be obtained from **P.table** part of the output:
 
@@ -262,6 +263,18 @@ round(100*D_out$P.table,1)
 ```
 
 From this table we see that majority of males are nevertheless not very clearly classified as males based on the Big Five personality traits (11% in .80-1 range), and same is true for classifying females as females (7% in 0-0.20 range).
+
+For examining the regularized beta weights obtained at the training phase, call **coefficients** on the **cv.mod** object of the output. Argument **s** is the value of the penalty parameter lambda by which the predictions are calculate. The default "lambda.min" uses the values where the mean cross-validated error is minimized, and "lambda.1se" uses the largest value of lambda such that error is within 1 standard error of the minimum. To obtain predicted values for a certain **s**, it must be supplied already to **D_regularized** -function, but the weights given by different approaches can be examined irregardless of the chosen value of **s**. It is also possible to plot the cross-validation curve to visualize how "lambda.min" and "lambda.1se" were obtained. For more information on regularized regression conducted with the glmnet package, please refer to <https://glmnet.stanford.edu/articles/glmnet.html>.
+
+```{r}
+coefficients(D_out$cv.mod,
+             s = "lambda.min")
+
+coefficients(D_out$cv.mod,
+             s = "lambda.1se")
+
+plot(D_out$cv.mod)
+```
 
 #### Overlap
 
@@ -279,7 +292,6 @@ OVL<-2*pnorm((-D/2))
 OVL2<-OVL/(2-OVL)
 
 # non-parametric overlap with overlapping package
-library(overlapping)
 
 np.overlap<-
   overlap(x = list(D_out$pred.dat[
@@ -318,7 +330,7 @@ t1<-Sys.time()
 
 for (i in 1:reps){
   # draw replaced samples with the same size as the original data
-  boot.dat<-sample(US.dat,size=nrow(US.dat),replace=T)
+  boot.dat<-sample_n(US.dat,size=nrow(US.dat),replace=T)
   
   # run D_regularized for each sample
   D_out_boot[i]<-
@@ -451,15 +463,15 @@ There overlap between FM-distributions of males and females is somewhat smaller 
 
 # References
 
-[Ilmarinen, V. J., Vainikainen, M. P., & Lönnqvist, J. E. (2022). Is there a g-factor of genderedness? Using a continuous measure of genderedness to assess sex differences in personality, values, cognitive ability, school grades, and educational track. *European Journal of Personality*.](https://doi.org/10.1177/08902070221088155)
+-   [Ilmarinen, V. J., Vainikainen, M. P., & Lönnqvist, J. E. (2022). Is there a g-factor of genderedness? Using a continuous measure of genderedness to assess sex differences in personality, values, cognitive ability, school grades, and educational track. *European Journal of Personality*.](https://doi.org/10.1177/08902070221088155)
 
-[Lippa, R. A., & Connelly, S. (1990). Gender diagnosticity: A new Bayesian approach to gender-related individual differences. *Journal of Personality and Social Psychology, 59*(5), 1051--1065.](https://doi.org/10.1037/0022-3514.59.5.1051)
+-   [Lippa, R. A., & Connelly, S. (1990). Gender diagnosticity: A new Bayesian approach to gender-related individual differences. *Journal of Personality and Social Psychology, 59*(5), 1051--1065.](https://doi.org/10.1037/0022-3514.59.5.1051)
 
-[Lönnqvist, J. E., & Ilmarinen, V. J. (2021). Using a continuous measure of genderedness to assess sex differences in the attitudes of the political elite. *Political Behavior, 43*, 1779--1800.](https://doi.org/10.1007/s11109-021-09681-2)
+-   [Lönnqvist, J. E., & Ilmarinen, V. J. (2021). Using a continuous measure of genderedness to assess sex differences in the attitudes of the political elite. *Political Behavior, 43*, 1779--1800.](https://doi.org/10.1007/s11109-021-09681-2)
 
-[Mõttus, R., Sinick, J., Terracciano, A., Hřebíčková, M., Kandler, C., Ando, J., Mortensen, E. L., Colodro-Conde, L., & Jang, K. L. (2019). Personality characteristics below facets: A replication and meta-analysis of cross-rater agreement, rank-order stability, heritability, and utility of personality nuances. *Journal of Personality and Social Psychology, 117*(4), 35--50.](https://doi.org/10.1037/pspp0000202)
+-   [Mõttus, R., Sinick, J., Terracciano, A., Hřebíčková, M., Kandler, C., Ando, J., Mortensen, E. L., Colodro-Conde, L., & Jang, K. L. (2019). Personality characteristics below facets: A replication and meta-analysis of cross-rater agreement, rank-order stability, heritability, and utility of personality nuances. *Journal of Personality and Social Psychology, 117*(4), 35--50.](https://doi.org/10.1037/pspp0000202)
 
-[Seeboth, A., & Mõttus, R. (2018). Successful explanations start with accurate descriptions: Questionnaire items as personality markers for more accurate predictions. *European Journal of Personality, 32*(3), 186---201.](https://doi.org/10.1002/per.2147)
+-   [Seeboth, A., & Mõttus, R. (2018). Successful explanations start with accurate descriptions: Questionnaire items as personality markers for more accurate predictions. *European Journal of Personality, 32*(3), 186---201.](https://doi.org/10.1002/per.2147)
 
 # Session Information
 

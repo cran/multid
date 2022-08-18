@@ -27,7 +27,7 @@ reliability_dms(
 \item{group_var}{Character string. Upper-level clustering unit.}
 }
 \value{
-A vector including ICC2s (r11 and r22), SDs (sd1 and sd2), correlation between means (r12), and reliability of the mean difference variable.
+A vector including ICC2s (r11 and r22), SDs (sd1, sd2, and sd_d12), means (m1, m2, and m_d12), correlation between means (r12), and reliability of the mean difference variable.
 }
 \description{
 Calculates reliability of difference score (Johns, 1981) based on two separate ICC2 values (Bliese, 2000), standard deviations of mean values over upper-level units, and correlations between the mean values across upper-level units.

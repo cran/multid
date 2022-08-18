@@ -1,10 +1,19 @@
+# multid 0.7.0
+
+* Switched from sample to dplyr::sample_n for bootstrap example in the multivariate sex difference vignette
+* Minor changes to style and text in the multivariate sex difference vignette
+* Additional descriptive statistics to reliability_dms output
+* Allow vpc_at for models with no intercept-slope covariation (conditional level-2 variances are same for all requested level-1 values)
+* Added function qcc for quantile correlation coefficient
+* Updated README
+
 # multid 0.6.0
 
 * Bug fixed in D_regularized_out
 * Addend.data argument added to all D_regularized -functions. In _fold -functions, test-partition of the data is appended, else the entire data frame is added.
 * Include ICC2 (group-mean reliability) for vpc_at. Enables calculation of sub-group mean-level reliabilities, in case the "at" is a group
 * Include reliability_dms that calculates difference score reliability coefficient for data that is difference score between two mean values across some upper-level units (e.g., sex differences across countries)
-* Vignette on estimation of multivariate sex differences with multid addede
+* Vignette on estimation of multivariate sex differences with multid added
 
 # multid 0.5.0
 

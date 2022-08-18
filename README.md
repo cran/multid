@@ -19,6 +19,11 @@ correlated variables in the multivariate set while providing k-fold
 cross-validation and regularization to avoid overfitting
 (**D_regularized** -function).
 
+See fully reproducible exemplary [vignette on multivariate sex
+differences in personality with regularized
+regression](https://CRAN.R-project.org/package=multid/vignettes/multivariate_sex_differences_in_personality.html),
+or examples presented below.
+
 Predictive approach as implemented with regularized methods also allows
 for examination of group-membership probabilities and their
 distributions across individuals. In the context of statistical
@@ -54,7 +59,7 @@ In addition, *multid* includes various helper functions:
 -   Calculation of variance partition coefficient (i.e., intraclass
     correlation, ICC) with **vpc_at** -function at different levels of
     lower-level predictors in two-level model including random slope
-    ([Goldstein et al.,
+    fitted with lmer ([Goldstein et al.,
     2002](https://doi.org/10.1207/S15328031US0104_02))
 
 -   Calculation of coefficient of variance variation and standardized
@@ -69,7 +74,12 @@ In addition, *multid* includes various helper functions:
     inputs in the equation for difference score reliability ([Johns,
     1981](https://doi.org/10.1016/0030-5073(81)90033-7)). Can be
     calculated from long format data file or from lmer-fitted two-level
-    model with **reliability_dms** -function.
+    model with **reliability_dms** -function
+
+-   Computing quantile correlation coefficient(s) with **qcc** -
+    function defined as the geometric mean of two quantile regression
+    slopes — that of X on Y and that of Y on X ([Choi & Shin,
+    2022](https://doi.org/10.1007/s00362-021-01268-7))
 
 ## Installation
 

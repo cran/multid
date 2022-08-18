@@ -13,9 +13,11 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 #  install.packages("devtools")
 #  devtools::install_github("vjilmari/multid")
 
-## ----setup--------------------------------------------------------------------
+## ----setup,warning = FALSE, message = FALSE-----------------------------------
 library(rio)
 library(multid)
+library(dplyr)
+library(overlapping)
 
 ## ----importdata---------------------------------------------------------------
 # create a temporary directory
@@ -40,18 +42,15 @@ dat <- import(file.path(td, "BIG5/data.csv"))
 unlink(td)
 
 ## -----------------------------------------------------------------------------
-
 # save names of personality items to a vector
 per.items<-names(dat)[which(names(dat)=="E1"):
                         which(names(dat)=="O10")]
 
 # code item response 0 (zero) to not available (NA) on all these items
-
 dat[,per.items]<-
   sapply(dat[,per.items],function(x){ifelse(x==0,NA,x)})
 
 # check that the numerical range makes sense
-
 range(dat[,per.items],na.rm=T)
 
 # calculate sum scores for Big Five (reverse coded items subtracted from 6)
@@ -159,6 +158,15 @@ round(D_out$D,2)
 ## -----------------------------------------------------------------------------
 round(100*D_out$P.table,1)
 
+## -----------------------------------------------------------------------------
+coefficients(D_out$cv.mod,
+             s = "lambda.min")
+
+coefficients(D_out$cv.mod,
+             s = "lambda.1se")
+
+plot(D_out$cv.mod)
+
 ## ---- fig.height=4, fig.width=8-----------------------------------------------
 
 # Obtain the D-estimate
@@ -171,7 +179,6 @@ OVL<-2*pnorm((-D/2))
 OVL2<-OVL/(2-OVL)
 
 # non-parametric overlap with overlapping package
-library(overlapping)
 
 np.overlap<-
   overlap(x = list(D_out$pred.dat[
@@ -203,7 +210,7 @@ t1<-Sys.time()
 
 for (i in 1:reps){
   # draw replaced samples with the same size as the original data
-  boot.dat<-sample(US.dat,size=nrow(US.dat),replace=T)
+  boot.dat<-sample_n(US.dat,size=nrow(US.dat),replace=T)
   
   # run D_regularized for each sample
   D_out_boot[i]<-

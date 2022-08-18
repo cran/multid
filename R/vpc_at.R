@@ -31,22 +31,49 @@
 #' )
 vpc_at <- function(model, lvl1.var, lvl1.values) {
   VC <- as.data.frame(lme4::VarCorr(model))
-  VC.frame <- cbind(VC[, c(1:3)], sdcor = VC[, 5], vcov = VC[
-    ,
-    4
-  ])
+
+  VC.frame <-
+    cbind(VC[, c(1:3)],
+      sdcor = VC[, 5],
+      vcov = VC[, 4]
+    )
+
   VC.frame[is.na(VC.frame)] <- "empty"
+
+  # obtain the covariance estimates from the VC.frame
+
+  # intercept variance
+  var_u0 <-
+    VC.frame[
+      VC.frame[, "var1"] ==
+        "(Intercept)" & VC.frame[, "var2"] == "empty",
+      "vcov"
+    ]
+
+  # covariance between intercept and slope
+  cov_u01 <-
+    VC.frame[VC.frame[, "var1"] == "(Intercept)" &
+      VC.frame[, "var2"] == lvl1.var, "vcov"]
+
+  # if not available, code as zer0
+  if (length(cov_u01) == 0) {
+    cov_u01 <- 0
+  } else {
+    cov_u01 <- cov_u01
+  }
+
+  # variance of slope
+  var_u1 <- VC.frame[VC.frame[, "var1"] ==
+    lvl1.var & VC.frame[, "var2"] ==
+    "empty", "vcov"]
+
+  # placeholder vector for conditional lvl2 variances
   cond.lvl2.values <- rep(NA, length(lvl1.values))
 
   for (i in 1:length(lvl1.values)) {
-    cond.lvl2.values[i] <- VC.frame[VC.frame[, "var1"] ==
-      "(Intercept)" & VC.frame[, "var2"] == "empty", "vcov"] +
-      2 * VC.frame[VC.frame[, "var1"] == "(Intercept)" &
-        VC.frame[, "var2"] == lvl1.var, "vcov"] * (lvl1.values[i]) +
-      VC.frame[VC.frame[, "var1"] == lvl1.var & VC.frame[
-        ,
-        "var2"
-      ] == "empty", "vcov"] * (lvl1.values[i])^2
+    cond.lvl2.values[i] <- var_u0 +
+      2 * cov_u01 * lvl1.values[i] +
+      var_u1 * (lvl1.values[i])^2
   }
 
   output <-
@@ -83,7 +110,8 @@ vpc_at <- function(model, lvl1.var, lvl1.values) {
 
     mean.n.obs <- n.obs / n.groups
 
-    output$mean.n.obs <- as.numeric(unname(mean.n.obs))
+    output$mean.n.obs <-
+      as.numeric(unname(mean.n.obs))
 
     output$ICC2 <-
       (output$VPC * output$mean.n.obs) / (output$VPC * output$mean.n.obs +

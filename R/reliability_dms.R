@@ -9,7 +9,7 @@
 #' @param diff_var_values Vector. Values of the component score groups in diff_var.
 #' @param group_var Character string. Upper-level clustering unit.
 #'
-#' @return A vector including ICC2s (r11 and r22), SDs (sd1 and sd2), correlation between means (r12), and reliability of the mean difference variable.
+#' @return A vector including ICC2s (r11 and r22), SDs (sd1, sd2, and sd_d12), means (m1, m2, and m_d12), correlation between means (r12), and reliability of the mean difference variable.
 #' @references Bliese, P. D. (2000). Within-group agreement, non-independence, and reliability: Implications for data aggregation and analysis. In K. J. Klein & S. W. J. Kozlowski (Eds.), Multilevel theory, research, and methods in organizations: Foundations, extensions, and new directions (pp. 349–381). Jossey-Bass.
 #' @references Johns, G. (1981). Difference score measures of organizational behavior variables: A critique. Organizational Behavior and Human Performance, 27(3), 443–463. https://doi.org/10.1016/0030-5073(81)90033-7
 #' @export
@@ -67,6 +67,13 @@ reliability_dms <-
     sd2.obs <- stats::sd(dm.2[, 2])
     r12.obs <- stats::cor(dm.1[, 2], dm.2[, 2])
 
+    sd_d12.obs <- stats::sd(dm.1[, 2]-dm.2[, 2])
+
+    mean1.obs <- mean(dm.1[, 2])
+    mean2.obs <- mean(dm.2[, 2])
+
+    mean_d12.obs <- mean(dm.1[, 2]-dm.2[, 2])
+
     obs.ds.rel <-
       (r11.obs * sd1.obs^2 + r22.obs * sd2.obs^2 - 2 * r12.obs * sd1.obs * sd2.obs) /
         (sd1.obs^2 + sd2.obs^2 - 2 * r12.obs * sd1.obs * sd2.obs)
@@ -75,7 +82,11 @@ reliability_dms <-
       c(
         r11 = r11.obs, r22 = r22.obs,
         r12 = r12.obs, sd1 = sd1.obs,
-        sd2 = sd2.obs, reliability_dmsa = obs.ds.rel
+        sd2 = sd2.obs, sd_d12 = sd_d12.obs,
+        m1 = mean1.obs,
+        m2 = mean2.obs,
+        m_d12 = mean_d12.obs,
+        reliability_dmsa = obs.ds.rel
       )
     return(output)
   }
