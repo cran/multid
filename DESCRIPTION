@@ -1,6 +1,6 @@
 Package: multid
 Title: Multivariate Difference Between Two Groups
-Version: 0.7.0
+Version: 0.7.1
 Authors@R: 
     person(given = "Ville-Juhani",
            family = "Ilmarinen",
@@ -20,9 +20,9 @@ Suggests: knitr (>= 1.39), rmarkdown (>= 2.14), overlapping (>= 1.7),
         rio (>= 0.5.29)
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2022-08-18 08:57:40 UTC; vjilm
+Packaged: 2022-12-21 08:02:52 UTC; vjilm
 Author: Ville-Juhani Ilmarinen [aut, cre]
     (<https://orcid.org/0000-0001-9493-379X>)
 Maintainer: Ville-Juhani Ilmarinen <vj.ilmarinen@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-08-18 12:00:05 UTC
+Date/Publication: 2022-12-21 10:00:02 UTC

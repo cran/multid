@@ -12,9 +12,10 @@
 #' @param nsim Numeric. Number of bootstrap simulations.
 #' @param seed Numeric. Seed number for bootstrap simulations.
 #' @param level Numeric. The confidence level required for the var_boot_test output (Default .95)
+#' @param abs_diff_test Numeric. A value against which absolute difference between component score predictions is tested (Default 0).
 #'
 #' @return
-#' \item{dadas}{A data frame including regression coefficients for component scores and dadas.}
+#' \item{dadas}{A data frame including main effect, interaction, regression coefficients for component scores, dadas, and comparison between interaction and main effect.}
 #' \item{scaled_estimates}{Scaled regression coefficients for difference score components and difference score.}
 #' \item{vpc_at_reduced}{Variance partition coefficients in the model without the predictor and interactions.}
 #' \item{re_cov_test}{Likelihood ratio significance test for random effect covariation.}
@@ -29,18 +30,18 @@
 #'
 #' dat <- data.frame(
 #'   group = rep(c(LETTERS[1:n1]), each = n2),
-#'   x = sample(c(-0.5, 0.5), n1 * n2, replace = TRUE),
-#'   w = rep(sample(1:5, n1, replace = TRUE), each = n2),
+#'   w = sample(c(-0.5, 0.5), n1 * n2, replace = TRUE),
+#'   x = rep(sample(1:5, n1, replace = TRUE), each = n2),
 #'   y = sample(1:5, n1 * n2, replace = TRUE)
 #' )
 #' library(lmerTest)
-#' fit <- lmerTest::lmer(y ~ x * w + (x | group),
+#' fit <- lmerTest::lmer(y ~ x * w + (w | group),
 #'   data = dat
 #' )
 #'
 #' round(ml_dadas(fit,
-#'   predictor = "w",
-#'   diff_var = "x",
+#'   predictor = "x",
+#'   diff_var = "w",
 #'   diff_var_values = c(0.5, -0.5)
 #' )$dadas, 3)
 #' }
@@ -53,7 +54,8 @@ ml_dadas <- function(model,
                      var_boot_test = FALSE,
                      nsim = NULL,
                      level = .95,
-                     seed = NULL) {
+                     seed = NULL,
+                     abs_diff_test = 0) {
 
   # reorder diff_var_values
   diff_var_values <-
@@ -112,27 +114,78 @@ ml_dadas <- function(model,
       side = ">"
     )
 
+  # one-way dadas test
+
   ml_abstest <-
     data.frame(emmeans::contrast(temp.cont,
-      method = list(abs_test = c(1, -1)),
+      method = list(dadas = c(1, -1)),
       side = ">"
     ))
+
+  # test of magnitude difference between interaction and main effect
+
+  interaction_vs_main <-
+    data.frame(emmeans::contrast(temp.cont,
+      method = list(
+        interaction_vs_main =
+          c(1, -1 / 2)
+      )
+    ))
+
+  # obtain main effect and interaction for the output
+  model.coefs <- summary(model)$coefficients
+  main_effect <- model.coefs[predictor, ]
+  moderator_effect <- model.coefs[diff_var, ]
+  interaction.term <-
+    ifelse(paste0(predictor, ":", diff_var) %in% rownames(model.coefs),
+      paste0(predictor, ":", diff_var),
+      paste0(diff_var, ":", predictor)
+    )
+  interaction <- model.coefs[interaction.term, ]
+
+  mi.coefs <-
+    rbind(
+      main_effect,
+      moderator_effect,
+      interaction
+    )
+  colnames(mi.coefs) <-
+    c("estimate", "SE", "df", "t.ratio", "p.value")
+
+  # simple slopes
 
   trends.df <- data.frame(trends)
   colnames(trends.df) <- colnames(data.frame(temp.cont))
 
+  # absolute difference test
+
+  adt <-
+    emmeans::contrast(trends,
+      method = mlist,
+      side = ">",
+      null = abs_diff_test
+    )
+  adt <- data.frame(adt)[1, ]
+  adt$contrast <-
+    paste0(adt$contrast, "_test_null", adt$null)
+  adt <-
+    adt[, -which(colnames(adt) == "null")]
+
+
+  # combine to same output
+
   dadas <- rbind(
     trends.df,
     data.frame(temp.cont),
-    ml_abstest
+    ml_abstest,
+    interaction_vs_main,
+    adt
   )
+
   rownames(dadas) <- dadas$contrast
   dadas <- dadas[, 2:ncol(dadas)]
 
-  rownames(dadas) <- c(
-    rownames(dadas)[1:(nrow(dadas) - 1)],
-    "dadas"
-  )
+  dadas <- rbind(mi.coefs, dadas)
 
   output <- list(dadas = dadas)
 
@@ -196,45 +249,95 @@ ml_dadas <- function(model,
     scaled_estimates_df <-
       rbind(
         c(
-          est = dadas[1, "estimate"],
+          est = dadas[
+            rownames(dadas) == diff_var_values[1],
+            "estimate"
+          ],
           scaling_SD =
             vpc_at_reduced[
-              vpc_at_reduced$lvl1.value ==
-                rownames(dadas[1, ]),
+              vpc_at_reduced[
+                ,
+                "lvl1.value"
+              ] == diff_var_values[1],
               "Intercept.sd"
             ],
-          scaled_est = dadas[1, "estimate"] /
+          scaled_est = dadas[
+            rownames(dadas) == diff_var_values[1],
+            "estimate"
+          ] /
             vpc_at_reduced[
-              vpc_at_reduced$lvl1.value ==
-                rownames(dadas[1, ]),
+              vpc_at_reduced[
+                ,
+                "lvl1.value"
+              ] == diff_var_values[1],
               "Intercept.sd"
             ]
         ),
         c(
-          est = dadas[2, "estimate"],
+          est = dadas[
+            rownames(dadas) == diff_var_values[2],
+            "estimate"
+          ],
           scaling_SD =
             vpc_at_reduced[
-              vpc_at_reduced$lvl1.value ==
-                rownames(dadas[2, ]),
+              vpc_at_reduced[
+                ,
+                "lvl1.value"
+              ] == diff_var_values[2],
               "Intercept.sd"
             ],
-          scaled_est = dadas[2, "estimate"] /
+          scaled_est = dadas[
+            rownames(dadas) == diff_var_values[2],
+            "estimate"
+          ] /
             vpc_at_reduced[
-              vpc_at_reduced$lvl1.value ==
-                rownames(dadas[2, ]),
+              vpc_at_reduced[
+                ,
+                "lvl1.value"
+              ] == diff_var_values[2],
               "Intercept.sd"
             ]
         ),
         c(
-          est = dadas[1, "estimate"] - dadas[2, "estimate"],
+          est = dadas[rownames(dadas) == diff_var_values[1], "estimate"] -
+            dadas[rownames(dadas) == diff_var_values[2], "estimate"],
           scaling_SD = slope_sd_reduced,
-          scaled_est = (dadas[1, "estimate"] - dadas[2, "estimate"]) /
+          scaled_est = (dadas[rownames(dadas) == diff_var_values[1], "estimate"] -
+            dadas[rownames(dadas) == diff_var_values[2], "estimate"]) /
             slope_sd_reduced
         )
       )
 
+    coef_diff <-
+      c(
+        est = scaled_estimates_df[1, "est"] -
+          scaled_estimates_df[2, "est"],
+        scaling_SD = NA,
+        scaled_est = scaled_estimates_df[1, "scaled_est"] -
+          scaled_estimates_df[2, "scaled_est"]
+      )
+
+    component_correlation <-
+      c(
+        est = NA,
+        scaling_SD = NA,
+        scaled_est =
+          (scaled_estimates_df[1, "scaling_SD"]^2 +
+            scaled_estimates_df[2, "scaling_SD"]^2 -
+            scaled_estimates_df[3, "scaling_SD"]^2) /
+            (2 * scaled_estimates_df[1, "scaling_SD"] *
+              scaled_estimates_df[2, "scaling_SD"])
+      )
+
     rownames(scaled_estimates_df) <-
       c(diff_var_values, "difference")
+
+    scaled_estimates_df <-
+      rbind(
+        scaled_estimates_df,
+        coef_diff,
+        component_correlation
+      )
   }
 
   if (re_cov_test) {

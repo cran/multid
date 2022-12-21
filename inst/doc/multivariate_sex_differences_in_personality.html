@@ -12,7 +12,7 @@
 
 <meta name="author" content="Ville-Juhani Ilmarinen" />
 
-<meta name="date" content="2022-08-18" />
+<meta name="date" content="2022-12-21" />
 
 <title>Multivariate Sex Differences in Personality with Regularized Regression in multid -package</title>
 
@@ -31,23 +31,23 @@ document.addEventListener('DOMContentLoaded', function(e) {
 </script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
@@ -65,55 +65,54 @@ pre > code.sourceCode { white-space: pre-wrap; }
 pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {   }
+{ }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -342,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Multivariate Sex Differences in Personality
 with Regularized Regression in multid -package</h1>
 <h4 class="author">Ville-Juhani Ilmarinen</h4>
-<h4 class="date">2022-08-18</h4>
+<h4 class="date">2022-12-21</h4>
 
 
 
@@ -777,7 +776,7 @@ reality one should take at least 1000 or 5000.</p>
 <span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>t2<span class="ot">&lt;-</span><span class="fu">Sys.time</span>()</span>
 <span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>t2<span class="sc">-</span>t1</span></code></pre></div>
-<pre><code>#&gt; Time difference of 6.255088 secs</code></pre>
+<pre><code>#&gt; Time difference of 6.277245 secs</code></pre>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print 95% CI percentile interval</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">quantile</span>(D_out_boot,<span class="fu">c</span>(.<span class="dv">025</span>,.<span class="dv">975</span>)),<span class="dv">2</span>)</span></code></pre></div>
@@ -963,9 +962,9 @@ accurate predictions. <em>European Journal of Personality, 32</em>(3),
 <div id="session-information" class="section level1">
 <h1>Session Information</h1>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
-<pre><code>#&gt; R version 4.2.1 (2022-06-23 ucrt)
+<pre><code>#&gt; R version 4.2.2 (2022-10-31 ucrt)
 #&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)
-#&gt; Running under: Windows 10 x64 (build 19043)
+#&gt; Running under: Windows 10 x64 (build 19045)
 #&gt; 
 #&gt; Matrix products: default
 #&gt; 
@@ -978,27 +977,27 @@ accurate predictions. <em>European Journal of Personality, 32</em>(3),
 #&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     
 #&gt; 
 #&gt; other attached packages:
-#&gt; [1] overlapping_1.8 testthat_3.1.4  ggplot2_3.3.5   dplyr_1.0.9    
-#&gt; [5] multid_0.7.0    rio_0.5.29     
+#&gt; [1] overlapping_1.8 testthat_3.1.5  ggplot2_3.3.5   dplyr_1.0.10   
+#&gt; [5] multid_0.7.1    rio_0.5.29     
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
 #&gt;  [1] Rcpp_1.0.9        lattice_0.20-45   assertthat_0.2.1  glmnet_4.1-4     
 #&gt;  [5] digest_0.6.29     foreach_1.5.2     utf8_1.2.2        R6_2.5.1         
-#&gt;  [9] cellranger_1.1.0  plyr_1.8.7        evaluate_0.16     highr_0.9        
-#&gt; [13] pillar_1.8.0      rlang_1.0.4       curl_4.3.2        readxl_1.4.0     
-#&gt; [17] rstudioapi_0.13   data.table_1.14.2 jquerylib_0.1.4   Matrix_1.4-1     
-#&gt; [21] rmarkdown_2.15    labeling_0.4.2    splines_4.2.1     stringr_1.4.0    
-#&gt; [25] foreign_0.8-82    munsell_0.5.0     compiler_4.2.1    xfun_0.30        
-#&gt; [29] pkgconfig_2.0.3   shape_1.4.6       htmltools_0.5.2   tidyselect_1.1.2 
-#&gt; [33] tibble_3.1.8      codetools_0.2-18  fansi_1.0.3       crayon_1.5.1     
-#&gt; [37] withr_2.5.0       brio_1.1.3        grid_4.2.1        jsonlite_1.8.0   
-#&gt; [41] gtable_0.3.0      lifecycle_1.0.1   DBI_1.1.2         magrittr_2.0.3   
-#&gt; [45] pROC_1.18.0       scales_1.2.0      zip_2.2.0         cli_3.3.0        
-#&gt; [49] stringi_1.7.6     farver_2.1.0      bslib_0.3.1       ellipsis_0.3.2   
-#&gt; [53] generics_0.1.3    vctrs_0.4.1       openxlsx_4.2.5    iterators_1.0.14 
-#&gt; [57] tools_4.2.1       forcats_0.5.1     glue_1.6.2        purrr_0.3.4      
-#&gt; [61] hms_1.1.1         fastmap_1.1.0     survival_3.3-1    yaml_2.3.5       
-#&gt; [65] colorspace_2.0-3  knitr_1.39        haven_2.5.0       sass_0.4.1</code></pre>
+#&gt;  [9] cellranger_1.1.0  plyr_1.8.7        evaluate_0.17     highr_0.9        
+#&gt; [13] pillar_1.8.1      rlang_1.0.6       curl_4.3.2        readxl_1.4.0     
+#&gt; [17] rstudioapi_0.13   data.table_1.14.2 jquerylib_0.1.4   Matrix_1.5-0     
+#&gt; [21] rmarkdown_2.15    labeling_0.4.2    splines_4.2.2     stringr_1.4.0    
+#&gt; [25] foreign_0.8-83    munsell_0.5.0     compiler_4.2.2    xfun_0.30        
+#&gt; [29] pkgconfig_2.0.3   shape_1.4.6       htmltools_0.5.2   tidyselect_1.2.0 
+#&gt; [33] tibble_3.1.8      codetools_0.2-18  fansi_1.0.3       withr_2.5.0      
+#&gt; [37] brio_1.1.3        grid_4.2.2        jsonlite_1.8.2    gtable_0.3.0     
+#&gt; [41] lifecycle_1.0.3   DBI_1.1.2         magrittr_2.0.3    pROC_1.18.0      
+#&gt; [45] scales_1.2.0      zip_2.2.0         cli_3.4.1         stringi_1.7.6    
+#&gt; [49] farver_2.1.0      bslib_0.3.1       ellipsis_0.3.2    generics_0.1.3   
+#&gt; [53] vctrs_0.4.2       openxlsx_4.2.5    iterators_1.0.14  tools_4.2.2      
+#&gt; [57] forcats_0.5.1     glue_1.6.2        hms_1.1.1         fastmap_1.1.0    
+#&gt; [61] survival_3.4-0    yaml_2.3.5        colorspace_2.0-3  knitr_1.39       
+#&gt; [65] haven_2.5.0       sass_0.4.1</code></pre>
 </div>
 
 

@@ -14,7 +14,8 @@ sem_dadas(
   covariates = NULL,
   estimator = "MLR",
   level = 0.95,
-  sampling.weights = NULL
+  sampling.weights = NULL,
+  abs_coef_diff_test = 0
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ sem_dadas(
 \item{level}{Numeric. The confidence level required for the result output (Default .95)}
 
 \item{sampling.weights}{Character string. Name of sampling weights variable.}
+
+\item{abs_coef_diff_test}{Numeric. A value against which absolute difference between component score predictions is tested (Default 0).}
 }
 \value{
 \item{descriptives}{Means, standard deviations, and intercorrelations.}
@@ -59,7 +62,8 @@ d <- data.frame(
 )
 sem_dadas(
   data = d, var1 = "var1", var2 = "var2",
-  predictor = "x", center = TRUE, scale = TRUE
+  predictor = "x", center = TRUE, scale = TRUE,
+  abs_coef_diff_test = 0.20
 )$results
 }
 }

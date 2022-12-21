@@ -75,7 +75,8 @@ qcc <- function(x, y, tau = c(.1, .5, .9), data, method = "br", boot_n = NULL, c
         function(x) {
           stats::quantile(
             x,
-            c((1 - ci_level) / 2, 1 - (1 - ci_level) / 2)
+            c((1 - ci_level) / 2, 1 - (1 - ci_level) / 2),
+            na.rm = TRUE
           )
         }
       ))
@@ -89,7 +90,8 @@ qcc <- function(x, y, tau = c(.1, .5, .9), data, method = "br", boot_n = NULL, c
         function(x) {
           stats::quantile(
             x,
-            c((1 - ci_level) / 2, 1 - (1 - ci_level) / 2)
+            c((1 - ci_level) / 2, 1 - (1 - ci_level) / 2),
+            na.rm = TRUE
           )
         }
       ))
