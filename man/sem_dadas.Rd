@@ -25,9 +25,9 @@ sem_dadas(
 
 \item{var2}{Character string. Variable name of second component score of difference score (Y_2).}
 
-\item{center}{Logical. Are var1 and var2 centered around their grand mean? (Default FALSE)}
+\item{center}{Logical. Should var1 and var2 be centered around their grand mean? (Default FALSE)}
 
-\item{scale}{Logical. Are var1 and var2 scaled with their pooled sd? (Default FALSE)}
+\item{scale}{Logical. Should var1 and var2 be scaled with their pooled sd? (Default FALSE)}
 
 \item{predictor}{Character string. Variable name of independent variable predicting difference score.}
 

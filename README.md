@@ -38,21 +38,17 @@ Studies in which these methods have been used:
     of the political elite. *Political Behavior, 43*,
     1779–1800.](https://doi.org/10.1007/s11109-021-09681-2)
 
-2.  [Ilmarinen, V. J., Vainikainen, M. P., & Lönnqvist, J. E. (2022). Is
+2.  [Ilmarinen, V. J., Vainikainen, M. P., & Lönnqvist, J. E. (2023). Is
     there a g-factor of genderedness? Using a continuous measure of
     genderedness to assess sex differences in personality, values,
     cognitive ability, school grades, and educational track. *European
-    Journal of Personality*.](https://doi.org/10.1177/08902070221088155)
+    Journal of Personality, 37*,
+    313-337.](https://doi.org/10.1177/08902070221088155)
 
-*multid* also includes functions for testing hypothesis that consider
-predicting algebraic difference scores as variables. A joint test that
-focuses on the regression coefficients on the difference score
-components (minuend and subtrahend) is provided in the structural
-equation modeling framework (**sem_dadas**) and multilevel models
-(**ml_dadas**). Difference between Absolute Difference and Absolute Sum
-of the regression coefficients (DADAS) is used for direct test of
-whether the coefficients can be interpreted as predicting a difference
-score.
+*multid* also includes a function for testing several hypothesis that
+are typically compressed to correlation between predictor (x) and an
+algebraic difference score (y1-y2) by deconstructing this difference
+score correlation (**ddsc_sem**).
 
 In addition, *multid* includes various helper functions:
 
@@ -344,7 +340,7 @@ D.ela<-
 
 round(D.ela$D,2)
 #>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff    D
-#> [1,]    100      100   0.54    -0.52    0.86      0.88      0.87 1.06 1.22
+#> [1,]    100      100   0.58    -0.58    0.89      0.99      0.94 1.16 1.23
 
 # use separate data for regularization and estimation
 
@@ -355,17 +351,17 @@ D.ela_out<-D_regularized(data=dat,
               out=T,size = 50,pcc = T, auc=T,pred.prob = T)
 
 round(D.ela_out$D,2)
-#>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff    D
-#> [1,]     50       50   0.55    -0.33    1.04      0.92      0.99 0.88 0.89
+#>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff   D
+#> [1,]     50       50   0.63    -0.34    1.14      1.01      1.08 0.97 0.9
 #>      pcc.male pcc.female pcc.total  auc
-#> [1,]     0.68       0.68      0.68 0.73
+#> [1,]     0.66       0.58      0.62 0.73
 
 # Table of predicted probabilites
 D.ela_out$P.table
 #>         
 #>          [0,0.2) [0.2,0.4) [0.4,0.6) [0.6,0.8) [0.8,1]
-#>   female    0.10      0.34      0.32      0.20    0.04
-#>   male      0.00      0.18      0.26      0.36    0.20
+#>   female    0.14      0.28      0.32      0.22    0.04
+#>   male      0.00      0.22      0.16      0.38    0.24
 ```
 
 ### Comparison of Mahalanobis’ D and Regularized D when Sex Difference in Population Does Not Exist
@@ -446,8 +442,8 @@ D.ela.zero<-
               group.values = c("male","female"))
 
 round(D.ela.zero$D,2)
-#>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff    D
-#> [1,]    100      100   0.02    -0.02     0.1       0.1       0.1 0.04 0.35
+#>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff   D
+#> [1,]    100      100      0        0       0         0         0    0 NaN
 
 # use separate data for regularization and estimation
 
@@ -459,17 +455,17 @@ D.ela.zero_out<-
               out=T,size = 50,pcc = T, auc=T,pred.prob = T)
 
 round(D.ela.zero_out$D,2)
-#>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff   D
-#> [1,]     50       50      0        0       0         0         0    0 NaN
-#>      pcc.male pcc.female pcc.total auc
-#> [1,]        1          0       0.5 0.5
+#>      n.male n.female m.male m.female sd.male sd.female pooled.sd diff    D
+#> [1,]     50       50   0.04     0.03    0.25      0.24      0.24 0.01 0.04
+#>      pcc.male pcc.female pcc.total  auc
+#> [1,]     0.58       0.46      0.52 0.51
 
 # Table of predicted probabilites
 D.ela.zero_out$P.table
 #>         
 #>          [0,0.2) [0.2,0.4) [0.4,0.6) [0.6,0.8) [0.8,1]
-#>   female       0         0         1         0       0
-#>   male         0         0         1         0       0
+#>   female    0.00      0.04      0.94      0.02    0.00
+#>   male      0.00      0.02      0.92      0.06    0.00
 ```
 
 ### Distribution overlap
@@ -505,15 +501,15 @@ ggplot(D.ela_out$pred.dat,
 
 ## obtain D first
 (D<-unname(D.ela_out$D[,"D"]))
-#> [1] 0.8884007
+#> [1] 0.9004981
 
 (OVL<-2*pnorm((-D/2)))
-#> [1] 0.6568977
+#> [1] 0.6525309
 
 ## Proportion of overlap relative to the joint distribution
 
 (OVL2<-OVL/(2-OVL))
-#> [1] 0.4890899
+#> [1] 0.484264
 
 # non-parametric overlap
 
@@ -533,17 +529,17 @@ np.overlap<-
 
 # this corresponds to Proportion of overlap relative to the joint distribution (OVL2)
 (np.OVL2<-unname(np.overlap$OV))
-#> [1] 0.5412493
+#> [1] 0.6980442
 
 # from which Proportion of overlap relative to a single distribution (OVL) is approximated at
 (np.OVL<-(2*np.OVL2)/(1+np.OVL2))
-#> [1] 0.7023514
+#> [1] 0.8221744
 
 # compare overlaps
 
 round(cbind(OVL,np.OVL,OVL2,np.OVL2),2)
 #>       OVL np.OVL OVL2 np.OVL2
-#> [1,] 0.66    0.7 0.49    0.54
+#> [1,] 0.65   0.82 0.48     0.7
 ```
 
 ### Predicting Difference Scores

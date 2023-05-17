@@ -1,6 +1,6 @@
 #' Use separate data partition for regularization and estimation.
 #'
-#' @param data A data frame.
+#' @param data A data frame or list containing two data frames (regularization and estimation data, in that order).
 #' @param mv.vars Character vector. Variable names in the multivariate variable set.
 #' @param group.var The name of the group variable.
 #' @param group.values Vector of length 2, group values (e.g. c("male", "female) or c(0,1)).
@@ -50,12 +50,6 @@ D_regularized_out <-
            pred.prob = FALSE,
            prob.cutoffs = seq(from = 0, to = 1, by = 0.20),
            append.data = FALSE) {
-    data$group.var.num <-
-      ifelse(data[, group.var] == group.values[1], 1,
-        ifelse(data[, group.var] == group.values[2], 0,
-          NA
-        )
-      )
 
     if (is.null(size)) {
       size <- round(nrow(data) / 4, 0)
@@ -63,17 +57,44 @@ D_regularized_out <-
       size <- size
     }
 
-    data$row.nmbr <- rownames(data)
+    if (is.data.frame(data)){
+      data$group.var.num <-
+        ifelse(data[, group.var] == group.values[1], 1,
+               ifelse(data[, group.var] == group.values[2], 0,
+                      NA
+               )
+        )
 
-    data.grouped <- dplyr::group_by(data, group.var.num)
+      data$row.nmbr <- rownames(data)
 
-    train.data <- dplyr::sample_n(data.grouped,
-      size = size,
-      replace = FALSE
-    )
+      data.grouped <- dplyr::group_by(data, group.var.num)
 
-    test.data <- data[!(data$row.nmbr %in% train.data$row.nmbr), ]
-    train.data <- dplyr::ungroup(train.data)
+      train.data <- dplyr::sample_n(data.grouped,
+                                    size = size,
+                                    replace = FALSE
+      )
+
+      test.data <- data[!(data$row.nmbr %in% train.data$row.nmbr), ]
+      train.data <- dplyr::ungroup(train.data)
+
+    } else {
+      train.data <- data[[1]]
+      test.data <- data[[2]]
+
+      train.data$group.var.num <-
+        ifelse(train.data[, group.var] == group.values[1], 1,
+               ifelse(train.data[, group.var] == group.values[2], 0,
+                      NA
+               )
+        )
+
+      test.data$group.var.num <-
+        ifelse(test.data[, group.var] == group.values[1], 1,
+               ifelse(test.data[, group.var] == group.values[2], 0,
+                      NA
+               )
+        )
+    }
 
     cv.mod <-
       glmnet::cv.glmnet(

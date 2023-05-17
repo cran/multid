@@ -6,8 +6,8 @@
 #' @param predictor Character string. Variable name of independent variable predicting difference score.
 #' @param covariates Character string or vector. Variable names of covariates (Default NULL).
 #' @param estimator Character string. Estimator used in SEM (Default "MLR").
-#' @param scale Logical. Are var1 and var2 scaled with their pooled sd? (Default FALSE)
-#' @param center Logical. Are var1 and var2 centered around their grand mean? (Default FALSE)
+#' @param scale Logical. Should var1 and var2 be scaled with their pooled sd? (Default FALSE)
+#' @param center Logical. Should var1 and var2 be centered around their grand mean? (Default FALSE)
 #' @param level Numeric. The confidence level required for the result output (Default .95)
 #' @param sampling.weights Character string. Name of sampling weights variable.
 #' @param abs_coef_diff_test Numeric. A value against which absolute difference between component score predictions is tested (Default 0).

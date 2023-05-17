@@ -1,6 +1,6 @@
 Package: multid
 Title: Multivariate Difference Between Two Groups
-Version: 0.7.1
+Version: 0.8.0
 Authors@R: 
     person(given = "Ville-Juhani",
            family = "Ilmarinen",
@@ -12,7 +12,7 @@ Description: Estimation of multivariate differences between two groups (e.g., mu
 License: GPL-3
 Encoding: UTF-8
 BugReports: https://github.com/vjilmari/multid/issues
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Imports: dplyr (>= 1.0.7), glmnet (>= 4.1.2), stats (>= 4.0.2), pROC
         (>= 1.18.0), lavaan (>= 0.6.9), emmeans (>= 1.6.3), lme4 (>=
         1.1.27.1), quantreg (>= 5.88)
@@ -20,9 +20,9 @@ Suggests: knitr (>= 1.39), rmarkdown (>= 2.14), overlapping (>= 1.7),
         rio (>= 0.5.29)
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2022-12-21 08:02:52 UTC; vjilm
+Packaged: 2023-05-17 19:34:05 UTC; vjilm
 Author: Ville-Juhani Ilmarinen [aut, cre]
     (<https://orcid.org/0000-0001-9493-379X>)
 Maintainer: Ville-Juhani Ilmarinen <vj.ilmarinen@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-12-21 10:00:02 UTC
+Date/Publication: 2023-05-17 21:40:06 UTC

@@ -236,7 +236,6 @@ d_vector_items<-rep(NA,length(per.items))
 
 # loop through the items and obtain d for each item
 
-
 for (i in 1:length(per.items)){
   d_vector_items[i]<-
     d_pooled_sd(data=US.dat,

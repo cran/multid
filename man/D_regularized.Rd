@@ -26,7 +26,7 @@ D_regularized(
 )
 }
 \arguments{
-\item{data}{A data frame.}
+\item{data}{A data frame or list containing two data frames (regularization and estimation data, in that order).}
 
 \item{mv.vars}{Character vector. Variable names in the multivariate variable set.}
 
@@ -44,7 +44,7 @@ D_regularized(
 
 \item{rename.output}{Logical. Should the output values be renamed according to the group.values? Default TRUE.}
 
-\item{out}{Logical. Should results and predictions be calculated on out-of-bad data set? (Default FALSE)}
+\item{out}{Logical. Should results and predictions be calculated on out-of-bag data set? (Default FALSE)}
 
 \item{size}{Integer. Number of cases in regularization data per each group. Default 1/4 of cases.}
 
