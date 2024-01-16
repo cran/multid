@@ -12,7 +12,7 @@
 
 <meta name="author" content="Ville-Juhani Ilmarinen" />
 
-<meta name="date" content="2023-05-17" />
+<meta name="date" content="2024-01-16" />
 
 <title>Multivariate Sex Differences in Personality with Regularized Regression in multid -package</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Multivariate Sex Differences in Personality
 with Regularized Regression in multid -package</h1>
 <h4 class="author">Ville-Juhani Ilmarinen</h4>
-<h4 class="date">2023-05-17</h4>
+<h4 class="date">2024-01-16</h4>
 
 
 
@@ -370,15 +370,15 @@ Ilmarinen (2021)</a>.</p>
 <div id="packages" class="section level2">
 <h2>Packages</h2>
 <p>You can install the released version of <em>multid</em> from <a href="https://CRAN.R-project.org">CRAN</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;multid&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;multid&quot;</span>)</span></code></pre></div>
 <p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;vjilmari/multid&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;vjilmari/multid&quot;</span>)</span></code></pre></div>
 <p>Load multid and other packages needed for the vignette</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rio)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multid)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(overlapping)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(rio)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">library</span>(multid)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="fu">library</span>(overlapping)</span></code></pre></div>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
@@ -389,72 +389,72 @@ directly from <a href="https://openpsychometrics.org" class="uri">https://openps
 here <a href="https://stackoverflow.com/a/66351588/8995170" class="uri">https://stackoverflow.com/a/66351588/8995170</a>), and there
 is no need to download it to your drive in order to reproduce the
 analyses described in this vignette.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a temporary directory</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>td <span class="ot">&lt;-</span> <span class="fu">tempdir</span>()</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># create a temporary file</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>tf <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">tmpdir=</span>td, <span class="at">fileext=</span><span class="st">&quot;.zip&quot;</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># download file from internet into temporary location</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">&quot;http://openpsychometrics.org/_rawdata/BIG5.zip&quot;</span>, tf)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># list zip archive</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>file_names <span class="ot">&lt;-</span> <span class="fu">unzip</span>(tf, <span class="at">list=</span><span class="cn">TRUE</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># extract files from zip file</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(tf, <span class="at">exdir=</span>td, <span class="at">overwrite=</span><span class="cn">TRUE</span>)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># use when zip file has only one file</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="fu">file.path</span>(td, <span class="st">&quot;BIG5/data.csv&quot;</span>))</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># delete the files and directories</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(td)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># create a temporary directory</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>td <span class="ot">&lt;-</span> <span class="fu">tempdir</span>()</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co"># create a temporary file</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>tf <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">tmpdir=</span>td, <span class="at">fileext=</span><span class="st">&quot;.zip&quot;</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co"># download file from internet into temporary location</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">&quot;http://openpsychometrics.org/_rawdata/BIG5.zip&quot;</span>, tf)</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co"># list zip archive</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>file_names <span class="ot">&lt;-</span> <span class="fu">unzip</span>(tf, <span class="at">list=</span><span class="cn">TRUE</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co"># extract files from zip file</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="fu">unzip</span>(tf, <span class="at">exdir=</span>td, <span class="at">overwrite=</span><span class="cn">TRUE</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co"># use when zip file has only one file</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="fu">file.path</span>(td, <span class="st">&quot;BIG5/data.csv&quot;</span>))</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co"># delete the files and directories</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="fu">unlink</span>(td)</span></code></pre></div>
 <div id="variable-transformations" class="section level3">
 <h3>Variable transformations</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save names of personality items to a vector</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>per.items<span class="ot">&lt;-</span><span class="fu">names</span>(dat)[<span class="fu">which</span>(<span class="fu">names</span>(dat)<span class="sc">==</span><span class="st">&quot;E1&quot;</span>)<span class="sc">:</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">which</span>(<span class="fu">names</span>(dat)<span class="sc">==</span><span class="st">&quot;O10&quot;</span>)]</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># code item response 0 (zero) to not available (NA) on all these items</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>dat[,per.items]<span class="ot">&lt;-</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(dat[,per.items],<span class="cf">function</span>(x){<span class="fu">ifelse</span>(x<span class="sc">==</span><span class="dv">0</span>,<span class="cn">NA</span>,x)})</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># check that the numerical range makes sense</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(dat[,per.items],<span class="at">na.rm=</span>T)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># save names of personality items to a vector</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>per.items<span class="ot">&lt;-</span><span class="fu">names</span>(dat)[<span class="fu">which</span>(<span class="fu">names</span>(dat)<span class="sc">==</span><span class="st">&quot;E1&quot;</span>)<span class="sc">:</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>                        <span class="fu">which</span>(<span class="fu">names</span>(dat)<span class="sc">==</span><span class="st">&quot;O10&quot;</span>)]</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co"># code item response 0 (zero) to not available (NA) on all these items</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>dat[,per.items]<span class="ot">&lt;-</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="fu">sapply</span>(dat[,per.items],<span class="cf">function</span>(x){<span class="fu">ifelse</span>(x<span class="sc">==</span><span class="dv">0</span>,<span class="cn">NA</span>,x)})</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co"># check that the numerical range makes sense</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="fu">range</span>(dat[,per.items],<span class="at">na.rm=</span>T)</span></code></pre></div>
 <pre><code>#&gt; [1] 1 5</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate sum scores for Big Five (reverse coded items subtracted from 6)</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># see codebook from https://openpsychometrics.org for item content and keys</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>N<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;N1&quot;</span>,<span class="st">&quot;N3&quot;</span>,<span class="st">&quot;N5&quot;</span>,<span class="st">&quot;N6&quot;</span>,<span class="st">&quot;N7&quot;</span>,<span class="st">&quot;N8&quot;</span>,<span class="st">&quot;N9&quot;</span>,<span class="st">&quot;N10&quot;</span>)],</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;N2&quot;</span>,<span class="st">&quot;N4&quot;</span>)]),<span class="at">na.rm=</span>T)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>E<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;E1&quot;</span>,<span class="st">&quot;E3&quot;</span>,<span class="st">&quot;E5&quot;</span>,<span class="st">&quot;E7&quot;</span>,<span class="st">&quot;E9&quot;</span>)],</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;E2&quot;</span>,<span class="st">&quot;E4&quot;</span>,<span class="st">&quot;E6&quot;</span>,<span class="st">&quot;E8&quot;</span>,<span class="st">&quot;E10&quot;</span>)]),<span class="at">na.rm=</span>T)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>O<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;O1&quot;</span>,<span class="st">&quot;O3&quot;</span>,<span class="st">&quot;O5&quot;</span>,<span class="st">&quot;O7&quot;</span>,<span class="st">&quot;O8&quot;</span>,<span class="st">&quot;O9&quot;</span>,<span class="st">&quot;O10&quot;</span>)],</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;O2&quot;</span>,<span class="st">&quot;O4&quot;</span>,<span class="st">&quot;O6&quot;</span>)]),<span class="at">na.rm=</span>T)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>A<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;A2&quot;</span>,<span class="st">&quot;A4&quot;</span>,<span class="st">&quot;A6&quot;</span>,<span class="st">&quot;A8&quot;</span>,<span class="st">&quot;A9&quot;</span>,<span class="st">&quot;A10&quot;</span>)],</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;A1&quot;</span>,<span class="st">&quot;A3&quot;</span>,<span class="st">&quot;A5&quot;</span>,<span class="st">&quot;A7&quot;</span>)]),<span class="at">na.rm=</span>T)</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>C<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>,<span class="st">&quot;C3&quot;</span>,<span class="st">&quot;C5&quot;</span>,<span class="st">&quot;C7&quot;</span>,<span class="st">&quot;C9&quot;</span>,<span class="st">&quot;C10&quot;</span>)],</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;C2&quot;</span>,<span class="st">&quot;C4&quot;</span>,<span class="st">&quot;C6&quot;</span>,<span class="st">&quot;C8&quot;</span>)]),<span class="at">na.rm=</span>T)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># calculate sum scores for Big Five (reverse coded items subtracted from 6)</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co"># see codebook from https://openpsychometrics.org for item content and keys</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>dat<span class="sc">$</span>N<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;N1&quot;</span>,<span class="st">&quot;N3&quot;</span>,<span class="st">&quot;N5&quot;</span>,<span class="st">&quot;N6&quot;</span>,<span class="st">&quot;N7&quot;</span>,<span class="st">&quot;N8&quot;</span>,<span class="st">&quot;N9&quot;</span>,<span class="st">&quot;N10&quot;</span>)],</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;N2&quot;</span>,<span class="st">&quot;N4&quot;</span>)]),<span class="at">na.rm=</span>T)</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>dat<span class="sc">$</span>E<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;E1&quot;</span>,<span class="st">&quot;E3&quot;</span>,<span class="st">&quot;E5&quot;</span>,<span class="st">&quot;E7&quot;</span>,<span class="st">&quot;E9&quot;</span>)],</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;E2&quot;</span>,<span class="st">&quot;E4&quot;</span>,<span class="st">&quot;E6&quot;</span>,<span class="st">&quot;E8&quot;</span>,<span class="st">&quot;E10&quot;</span>)]),<span class="at">na.rm=</span>T)</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>dat<span class="sc">$</span>O<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;O1&quot;</span>,<span class="st">&quot;O3&quot;</span>,<span class="st">&quot;O5&quot;</span>,<span class="st">&quot;O7&quot;</span>,<span class="st">&quot;O8&quot;</span>,<span class="st">&quot;O9&quot;</span>,<span class="st">&quot;O10&quot;</span>)],</span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;O2&quot;</span>,<span class="st">&quot;O4&quot;</span>,<span class="st">&quot;O6&quot;</span>)]),<span class="at">na.rm=</span>T)</span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>dat<span class="sc">$</span>A<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;A2&quot;</span>,<span class="st">&quot;A4&quot;</span>,<span class="st">&quot;A6&quot;</span>,<span class="st">&quot;A8&quot;</span>,<span class="st">&quot;A9&quot;</span>,<span class="st">&quot;A10&quot;</span>)],</span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;A1&quot;</span>,<span class="st">&quot;A3&quot;</span>,<span class="st">&quot;A5&quot;</span>,<span class="st">&quot;A7&quot;</span>)]),<span class="at">na.rm=</span>T)</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>dat<span class="sc">$</span>C<span class="ot">&lt;-</span><span class="fu">rowMeans</span>(</span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>  <span class="fu">cbind</span>(dat[,<span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>,<span class="st">&quot;C3&quot;</span>,<span class="st">&quot;C5&quot;</span>,<span class="st">&quot;C7&quot;</span>,<span class="st">&quot;C9&quot;</span>,<span class="st">&quot;C10&quot;</span>)],</span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>        <span class="dv">6</span><span class="sc">-</span>dat[,<span class="fu">c</span>(<span class="st">&quot;C2&quot;</span>,<span class="st">&quot;C4&quot;</span>,<span class="st">&quot;C6&quot;</span>,<span class="st">&quot;C8&quot;</span>)]),<span class="at">na.rm=</span>T)</span></code></pre></div>
 <p>For the purposes of this example, we will only analyze responses from
 the United States to examine sex differences. Additionally, we will only
 include participants who identified as male (gender=1) or female
 (gender=2), and who did not have any missing responses.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>US.dat<span class="ot">&lt;-</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>(dat[dat<span class="sc">$</span>country<span class="sc">==</span><span class="st">&quot;US&quot;</span> <span class="sc">&amp;</span> (dat<span class="sc">$</span>gender<span class="sc">==</span><span class="dv">1</span> <span class="sc">|</span> dat<span class="sc">$</span>gender<span class="sc">==</span><span class="dv">2</span>),</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">c</span>(<span class="st">&quot;gender&quot;</span>,per.items,<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>)])</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># code categorical gender variables</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>US.dat<span class="sc">$</span>gender.cat<span class="ot">&lt;-</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(US.dat<span class="sc">$</span>gender<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>US.dat<span class="ot">&lt;-</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">na.omit</span>(dat[dat<span class="sc">$</span>country<span class="sc">==</span><span class="st">&quot;US&quot;</span> <span class="sc">&amp;</span> (dat<span class="sc">$</span>gender<span class="sc">==</span><span class="dv">1</span> <span class="sc">|</span> dat<span class="sc">$</span>gender<span class="sc">==</span><span class="dv">2</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>              <span class="fu">c</span>(<span class="st">&quot;gender&quot;</span>,per.items,<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>)])</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co"># code categorical gender variables</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>US.dat<span class="sc">$</span>gender.cat<span class="ot">&lt;-</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="fu">ifelse</span>(US.dat<span class="sc">$</span>gender<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -481,32 +481,32 @@ statistical inference is desired (<strong>infer</strong>). All arguments
 except for statistical inference are also included in the multivariate
 function <strong>D_regularized</strong>, which is presented further
 below.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>d.N<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;N&quot;</span>,</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>d.E<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;E&quot;</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>d.O<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;O&quot;</span>,</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>d.A<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;A&quot;</span>,</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>d.C<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;C&quot;</span>,</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co"># compile to a table</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>uni.d<span class="ot">&lt;-</span><span class="fu">rbind</span>(d.N,d.E,d.O,d.A,d.C)</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(uni.d)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>)</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(uni.d,<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>d.N<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;N&quot;</span>,</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>d.E<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;E&quot;</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>d.O<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;O&quot;</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>d.A<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;A&quot;</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a>d.C<span class="ot">&lt;-</span><span class="fu">d_pooled_sd</span>(<span class="at">data =</span> US.dat,<span class="at">var =</span> <span class="st">&quot;C&quot;</span>,</span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>            <span class="at">group.var =</span> <span class="st">&quot;gender.cat&quot;</span>,<span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a>            <span class="at">infer=</span>T)</span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="co"># compile to a table</span></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a>uni.d<span class="ot">&lt;-</span><span class="fu">rbind</span>(d.N,d.E,d.O,d.A,d.C)</span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="fu">rownames</span>(uni.d)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>)</span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a></span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a><span class="fu">round</span>(uni.d,<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>#&gt;   n.Male n.Female m.Male m.Female sd.Male sd.Female pooled.sd  diff     D
 #&gt; N   2945     5739   2.79     3.16    0.88      0.86      0.87 -0.37 -0.42
 #&gt; E   2945     5739   3.00     3.06    0.96      0.96      0.96 -0.07 -0.07
@@ -561,24 +561,24 @@ and female group centroids in multivariate space. To calculate
 Mahalanobis’ <em>D</em>, you need the correlation matrix of the
 multivariate set and a vector of standardized mean differences. The
 ordering of the variables should be the same in both inputs.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># let&#39;s use the previously obtained univariate d-values</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>d_vector<span class="ot">&lt;-</span>uni.d[,<span class="st">&quot;D&quot;</span>]</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate intercorrelations</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>cor_mat<span class="ot">&lt;-</span><span class="fu">cor</span>(US.dat[,<span class="fu">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>)])</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># test that the ordering of these variables matches</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(d_vector)<span class="sc">==</span><span class="fu">colnames</span>(cor_mat)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># let&#39;s use the previously obtained univariate d-values</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>d_vector<span class="ot">&lt;-</span>uni.d[,<span class="st">&quot;D&quot;</span>]</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co"># calculate intercorrelations</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>cor_mat<span class="ot">&lt;-</span><span class="fu">cor</span>(US.dat[,<span class="fu">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>)])</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co"># test that the ordering of these variables matches</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="fu">names</span>(d_vector)<span class="sc">==</span><span class="fu">colnames</span>(cor_mat)</span></code></pre></div>
 <pre><code>#&gt; [1] TRUE TRUE TRUE TRUE TRUE</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print the correlation matrix</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(cor_mat,<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># print the correlation matrix</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">round</span>(cor_mat,<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>#&gt;       N     E     O     A     C
 #&gt; N  1.00 -0.25 -0.10 -0.10 -0.26
 #&gt; E -0.25  1.00  0.15  0.31  0.10
 #&gt; O -0.10  0.15  1.00  0.10  0.05
 #&gt; A -0.10  0.31  0.10  1.00  0.17
 #&gt; C -0.26  0.10  0.05  0.17  1.00</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate D</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>D_maha<span class="ot">&lt;-</span><span class="fu">sqrt</span>(<span class="fu">t</span>(d_vector) <span class="sc">%*%</span> <span class="fu">solve</span>(cor_mat) <span class="sc">%*%</span> d_vector)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>D_maha</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># Calculate D</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>D_maha<span class="ot">&lt;-</span><span class="fu">sqrt</span>(<span class="fu">t</span>(d_vector) <span class="sc">%*%</span> <span class="fu">solve</span>(cor_mat) <span class="sc">%*%</span> d_vector)</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>D_maha</span></code></pre></div>
 <pre><code>#&gt;           [,1]
 #&gt; [1,] 0.7681502</code></pre>
 <p>Mahalanobis’ <em>D</em> is, of course, larger than any of the
@@ -618,27 +618,27 @@ operating characteristics), and frequencies indicating the proportions
 of the sample that fall within certain cutoffs of predicted
 probabilities from 0 to 1 for each group (<strong>pred.prob</strong>) by
 using these arguments within <strong>D_regularized</strong> call.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed number for reproducibility</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">37127</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># decide the size of the regularization (training data fold)</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># here, half of the smaller of the male and female groups is used</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>size<span class="ot">=</span><span class="fu">round</span>(<span class="fu">min</span>(<span class="fu">table</span>(US.dat<span class="sc">$</span>gender.cat))<span class="sc">/</span><span class="dv">2</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># run D_regularized</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>D_out<span class="ot">&lt;-</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">D_regularized</span>(<span class="at">data=</span>US.dat,</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">mv.vars=</span><span class="fu">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>),</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">group.var=</span><span class="st">&quot;gender.cat&quot;</span>,</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>                <span class="at">out =</span> T,</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">size=</span>size,</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>                <span class="at">pcc =</span> T,</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">auc =</span> T,</span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">pred.prob =</span> T)</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="co"># print the output</span></span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(D_out<span class="sc">$</span>D,<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># set seed number for reproducibility</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">37127</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="co"># decide the size of the regularization (training data fold)</span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="co"># here, half of the smaller of the male and female groups is used</span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>size<span class="ot">=</span><span class="fu">round</span>(<span class="fu">min</span>(<span class="fu">table</span>(US.dat<span class="sc">$</span>gender.cat))<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="co"># run D_regularized</span></span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>D_out<span class="ot">&lt;-</span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>  <span class="fu">D_regularized</span>(<span class="at">data=</span>US.dat,</span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>                <span class="at">mv.vars=</span><span class="fu">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>),</span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a>                <span class="at">group.var=</span><span class="st">&quot;gender.cat&quot;</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a>                <span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a>                <span class="at">out =</span> T,</span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a>                <span class="at">size=</span>size,</span>
+<span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a>                <span class="at">pcc =</span> T,</span>
+<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a>                <span class="at">auc =</span> T,</span>
+<span id="cb17-18"><a href="#cb17-18" tabindex="-1"></a>                <span class="at">pred.prob =</span> T)</span>
+<span id="cb17-19"><a href="#cb17-19" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" tabindex="-1"></a><span class="co"># print the output</span></span>
+<span id="cb17-21"><a href="#cb17-21" tabindex="-1"></a><span class="fu">round</span>(D_out<span class="sc">$</span>D,<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>#&gt;      n.Male n.Female m.Male m.Female sd.Male sd.Female pooled.sd diff    D
 #&gt; [1,]   1473     4267   0.34     -0.3    0.86      0.79      0.81 0.64 0.79
 #&gt;      pcc.Male pcc.Female pcc.total  auc
@@ -661,7 +661,7 @@ Big Five domains in predicting sex. The predicted probabilities of being
 male across certain cutoffs (defaults were used in this example) for
 both groups can be obtained from the <strong>P.table</strong> part of
 the output.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span>D_out<span class="sc">$</span>P.table,<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span>D_out<span class="sc">$</span>P.table,<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>#&gt;         
 #&gt;          [0,0.2) [0.2,0.4) [0.4,0.6) [0.6,0.8) [0.8,1]
 #&gt;   Female     7.2      39.0      37.0      14.1     2.7
@@ -681,8 +681,8 @@ is within one standard error of the minimum. It is also possible to plot
 the cross-validation curve to visualize how “lambda.min” and
 “lambda.1se” were obtained. For more information on regularized
 regression conducted with the glmnet package, please refer to <a href="https://glmnet.stanford.edu/articles/glmnet.html" class="uri">https://glmnet.stanford.edu/articles/glmnet.html</a>.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(D_out<span class="sc">$</span>cv.mod,</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">s =</span> <span class="st">&quot;lambda.min&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">coefficients</span>(D_out<span class="sc">$</span>cv.mod,</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>             <span class="at">s =</span> <span class="st">&quot;lambda.min&quot;</span>)</span></code></pre></div>
 <pre><code>#&gt; 6 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 #&gt;                      s1
 #&gt; (Intercept)  3.37297381
@@ -691,8 +691,8 @@ regression conducted with the glmnet package, please refer to <a href="https://g
 #&gt; O            0.64983681
 #&gt; A           -0.88854735
 #&gt; C           -0.23751055</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(D_out<span class="sc">$</span>cv.mod,</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">s =</span> <span class="st">&quot;lambda.1se&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">coefficients</span>(D_out<span class="sc">$</span>cv.mod,</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>             <span class="at">s =</span> <span class="st">&quot;lambda.1se&quot;</span>)</span></code></pre></div>
 <pre><code>#&gt; 6 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 #&gt;                     s1
 #&gt; (Intercept)  2.3670214
@@ -701,7 +701,7 @@ regression conducted with the glmnet package, please refer to <a href="https://g
 #&gt; O            0.4626928
 #&gt; A           -0.6930196
 #&gt; C           -0.1053781</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(D_out<span class="sc">$</span>cv.mod)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">plot</span>(D_out<span class="sc">$</span>cv.mod)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
 <div id="overlap" class="section level4">
 <h4>Overlap</h4>
@@ -712,32 +712,32 @@ between the distributions of FM-scores of males and females, we can
 observe differences between the two groups. However, we can also
 identify similarities by examining the degree of
 <strong>overlap</strong> between the distributions.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the D-estimate</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>D<span class="ot">&lt;-</span><span class="fu">unname</span>(D_out<span class="sc">$</span>D[,<span class="st">&quot;D&quot;</span>])</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Overlap relative to a single distribution (OVL)</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>OVL<span class="ot">&lt;-</span><span class="dv">2</span><span class="sc">*</span><span class="fu">pnorm</span>((<span class="sc">-</span>D<span class="sc">/</span><span class="dv">2</span>))</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Proportion of overlap relative to the joint distribution</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>OVL2<span class="ot">&lt;-</span>OVL<span class="sc">/</span>(<span class="dv">2</span><span class="sc">-</span>OVL)</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co"># non-parametric overlap with overlapping package</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>np.overlap<span class="ot">&lt;-</span></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">overlap</span>(<span class="at">x =</span> <span class="fu">list</span>(D_out<span class="sc">$</span>pred.dat[</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  D_out<span class="sc">$</span>pred.dat<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Male&quot;</span>,<span class="st">&quot;pred&quot;</span>],</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  D_out<span class="sc">$</span>pred.dat[</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  D_out<span class="sc">$</span>pred.dat<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Female&quot;</span>,<span class="st">&quot;pred&quot;</span>]),</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot=</span>T)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="co"># Obtain the D-estimate</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>D<span class="ot">&lt;-</span><span class="fu">unname</span>(D_out<span class="sc">$</span>D[,<span class="st">&quot;D&quot;</span>])</span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a><span class="co"># Overlap relative to a single distribution (OVL)</span></span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>OVL<span class="ot">&lt;-</span><span class="dv">2</span><span class="sc">*</span><span class="fu">pnorm</span>((<span class="sc">-</span>D<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a><span class="co"># Proportion of overlap relative to the joint distribution</span></span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>OVL2<span class="ot">&lt;-</span>OVL<span class="sc">/</span>(<span class="dv">2</span><span class="sc">-</span>OVL)</span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a><span class="co"># non-parametric overlap with overlapping package</span></span>
+<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a>np.overlap<span class="ot">&lt;-</span></span>
+<span id="cb26-13"><a href="#cb26-13" tabindex="-1"></a>  <span class="fu">overlap</span>(<span class="at">x =</span> <span class="fu">list</span>(D_out<span class="sc">$</span>pred.dat[</span>
+<span id="cb26-14"><a href="#cb26-14" tabindex="-1"></a>  D_out<span class="sc">$</span>pred.dat<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Male&quot;</span>,<span class="st">&quot;pred&quot;</span>],</span>
+<span id="cb26-15"><a href="#cb26-15" tabindex="-1"></a>  D_out<span class="sc">$</span>pred.dat[</span>
+<span id="cb26-16"><a href="#cb26-16" tabindex="-1"></a>  D_out<span class="sc">$</span>pred.dat<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Female&quot;</span>,<span class="st">&quot;pred&quot;</span>]),</span>
+<span id="cb26-17"><a href="#cb26-17" tabindex="-1"></a>  <span class="at">plot=</span>T)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this corresponds to Proportion of overlap relative to the joint distribution (OVL2)</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>np.OVL2<span class="ot">&lt;-</span><span class="fu">unname</span>(np.overlap<span class="sc">$</span>OV)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># from which Proportion of overlap relative to a single distribution (OVL) is approximated at</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>np.OVL<span class="ot">&lt;-</span>(<span class="dv">2</span><span class="sc">*</span>np.OVL2)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span>np.OVL2)</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># comparison of different overlap-estimates</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(OVL,np.OVL,OVL2,np.OVL2),<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="co"># this corresponds to Proportion of overlap relative to the joint distribution (OVL2)</span></span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>np.OVL2<span class="ot">&lt;-</span><span class="fu">unname</span>(np.overlap<span class="sc">$</span>OV)</span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a><span class="co"># from which Proportion of overlap relative to a single distribution (OVL) is approximated at</span></span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>np.OVL<span class="ot">&lt;-</span>(<span class="dv">2</span><span class="sc">*</span>np.OVL2)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span>np.OVL2)</span>
+<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a><span class="co"># comparison of different overlap-estimates</span></span>
+<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(OVL,np.OVL,OVL2,np.OVL2),<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>#&gt;       OVL np.OVL OVL2 np.OVL2
 #&gt; [1,] 0.69   0.82 0.53     0.7</code></pre>
 <p>In this example, the non-parametric overlap (np) estimates to these
@@ -754,36 +754,36 @@ these <em>D</em> values to construct a percentile confidence interval
 around the estimate. In this example, only 10 redraws with replacement
 are used, but in practice, at least 1000 or 5000 redraws should be used
 for more accurate results.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># number of redraws</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>reps<span class="ot">=</span><span class="dv">10</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># placeholder for D-estimates</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>D_out_boot<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="cn">NA</span>,reps)</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># repeat the procedure to obtain a distribution</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>t1<span class="ot">&lt;-</span><span class="fu">Sys.time</span>()</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>reps){</span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># draw replaced samples with the same size as the original data</span></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  boot.dat<span class="ot">&lt;-</span><span class="fu">sample_n</span>(US.dat,<span class="at">size=</span><span class="fu">nrow</span>(US.dat),<span class="at">replace=</span>T)</span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># run D_regularized for each sample</span></span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  D_out_boot[i]<span class="ot">&lt;-</span></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">D_regularized</span>(<span class="at">data=</span>boot.dat,</span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">mv.vars=</span><span class="fu">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>),</span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.var=</span><span class="st">&quot;gender.cat&quot;</span>,</span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">out =</span> T,</span>
-<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>              <span class="at">size=</span>size)<span class="sc">$</span>D[,<span class="st">&quot;D&quot;</span>]</span>
-<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>t2<span class="ot">&lt;-</span><span class="fu">Sys.time</span>()</span>
-<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>t2<span class="sc">-</span>t1</span></code></pre></div>
-<pre><code>#&gt; Time difference of 5.830213 secs</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print 95% CI percentile interval</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">quantile</span>(D_out_boot,<span class="fu">c</span>(.<span class="dv">025</span>,.<span class="dv">975</span>)),<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="co"># number of redraws</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>reps<span class="ot">=</span><span class="dv">10</span></span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a><span class="co"># placeholder for D-estimates</span></span>
+<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a>D_out_boot<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="cn">NA</span>,reps)</span>
+<span id="cb29-6"><a href="#cb29-6" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" tabindex="-1"></a><span class="co"># repeat the procedure to obtain a distribution</span></span>
+<span id="cb29-8"><a href="#cb29-8" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" tabindex="-1"></a>t1<span class="ot">&lt;-</span><span class="fu">Sys.time</span>()</span>
+<span id="cb29-10"><a href="#cb29-10" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>reps){</span>
+<span id="cb29-12"><a href="#cb29-12" tabindex="-1"></a>  <span class="co"># draw replaced samples with the same size as the original data</span></span>
+<span id="cb29-13"><a href="#cb29-13" tabindex="-1"></a>  boot.dat<span class="ot">&lt;-</span><span class="fu">sample_n</span>(US.dat,<span class="at">size=</span><span class="fu">nrow</span>(US.dat),<span class="at">replace=</span>T)</span>
+<span id="cb29-14"><a href="#cb29-14" tabindex="-1"></a>  </span>
+<span id="cb29-15"><a href="#cb29-15" tabindex="-1"></a>  <span class="co"># run D_regularized for each sample</span></span>
+<span id="cb29-16"><a href="#cb29-16" tabindex="-1"></a>  D_out_boot[i]<span class="ot">&lt;-</span></span>
+<span id="cb29-17"><a href="#cb29-17" tabindex="-1"></a>    <span class="fu">D_regularized</span>(<span class="at">data=</span>boot.dat,</span>
+<span id="cb29-18"><a href="#cb29-18" tabindex="-1"></a>                <span class="at">mv.vars=</span><span class="fu">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;O&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>),</span>
+<span id="cb29-19"><a href="#cb29-19" tabindex="-1"></a>              <span class="at">group.var=</span><span class="st">&quot;gender.cat&quot;</span>,</span>
+<span id="cb29-20"><a href="#cb29-20" tabindex="-1"></a>              <span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb29-21"><a href="#cb29-21" tabindex="-1"></a>              <span class="at">out =</span> T,</span>
+<span id="cb29-22"><a href="#cb29-22" tabindex="-1"></a>              <span class="at">size=</span>size)<span class="sc">$</span>D[,<span class="st">&quot;D&quot;</span>]</span>
+<span id="cb29-23"><a href="#cb29-23" tabindex="-1"></a>  </span>
+<span id="cb29-24"><a href="#cb29-24" tabindex="-1"></a>}</span>
+<span id="cb29-25"><a href="#cb29-25" tabindex="-1"></a>t2<span class="ot">&lt;-</span><span class="fu">Sys.time</span>()</span>
+<span id="cb29-26"><a href="#cb29-26" tabindex="-1"></a>t2<span class="sc">-</span>t1</span></code></pre></div>
+<pre><code>#&gt; Time difference of 7.817892 secs</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="co"># print 95% CI percentile interval</span></span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">quantile</span>(D_out_boot,<span class="fu">c</span>(.<span class="dv">025</span>,.<span class="dv">975</span>)),<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>#&gt;  2.5% 97.5% 
 #&gt;  0.77  0.83</code></pre>
 <p>After obtaining the bootstrap confidence interval, it can be reported
@@ -815,26 +815,26 @@ of the data. For illustrative purposes, Mahalanobis’ <em>D</em> is also
 calculated below.</p>
 <div id="mahalanobis-d-1" class="section level3">
 <h3>Mahalanobis’ <em>D</em></h3>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># place-holder vector for univariate Cohen d&#39;s for items</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>d_vector_items<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="cn">NA</span>,<span class="fu">length</span>(per.items))</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># loop through the items and obtain d for each item</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(per.items)){</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  d_vector_items[i]<span class="ot">&lt;-</span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">d_pooled_sd</span>(<span class="at">data=</span>US.dat,</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">var=</span>per.items[i],</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.var=</span><span class="st">&quot;gender.cat&quot;</span>,</span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">group.values=</span><span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>))[,<span class="st">&quot;D&quot;</span>]</span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>cor_mat_items<span class="ot">&lt;-</span><span class="fu">cor</span>(US.dat[,per.items])</span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate D</span></span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>D_maha_items<span class="ot">&lt;-</span></span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(<span class="fu">t</span>(d_vector_items) <span class="sc">%*%</span> <span class="fu">solve</span>(cor_mat_items) <span class="sc">%*%</span> d_vector_items)</span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>D_maha_items</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="co"># place-holder vector for univariate Cohen d&#39;s for items</span></span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>d_vector_items<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="cn">NA</span>,<span class="fu">length</span>(per.items))</span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a><span class="co"># loop through the items and obtain d for each item</span></span>
+<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(per.items)){</span>
+<span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a>  d_vector_items[i]<span class="ot">&lt;-</span></span>
+<span id="cb33-8"><a href="#cb33-8" tabindex="-1"></a>    <span class="fu">d_pooled_sd</span>(<span class="at">data=</span>US.dat,</span>
+<span id="cb33-9"><a href="#cb33-9" tabindex="-1"></a>              <span class="at">var=</span>per.items[i],</span>
+<span id="cb33-10"><a href="#cb33-10" tabindex="-1"></a>            <span class="at">group.var=</span><span class="st">&quot;gender.cat&quot;</span>,</span>
+<span id="cb33-11"><a href="#cb33-11" tabindex="-1"></a>            <span class="at">group.values=</span><span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>))[,<span class="st">&quot;D&quot;</span>]</span>
+<span id="cb33-12"><a href="#cb33-12" tabindex="-1"></a>  </span>
+<span id="cb33-13"><a href="#cb33-13" tabindex="-1"></a>}</span>
+<span id="cb33-14"><a href="#cb33-14" tabindex="-1"></a></span>
+<span id="cb33-15"><a href="#cb33-15" tabindex="-1"></a>cor_mat_items<span class="ot">&lt;-</span><span class="fu">cor</span>(US.dat[,per.items])</span>
+<span id="cb33-16"><a href="#cb33-16" tabindex="-1"></a></span>
+<span id="cb33-17"><a href="#cb33-17" tabindex="-1"></a><span class="co"># Calculate D</span></span>
+<span id="cb33-18"><a href="#cb33-18" tabindex="-1"></a>D_maha_items<span class="ot">&lt;-</span></span>
+<span id="cb33-19"><a href="#cb33-19" tabindex="-1"></a>  <span class="fu">sqrt</span>(<span class="fu">t</span>(d_vector_items) <span class="sc">%*%</span> <span class="fu">solve</span>(cor_mat_items) <span class="sc">%*%</span> d_vector_items)</span>
+<span id="cb33-20"><a href="#cb33-20" tabindex="-1"></a>D_maha_items</span></code></pre></div>
 <pre><code>#&gt;           [,1]
 #&gt; [1,] 0.9212846</code></pre>
 <p>Item-based Mahalanobis’ <em>D</em> is somewhat larger than <em>D</em>
@@ -849,22 +849,22 @@ variable sets (especially when the variable names are save in a vector
 first; here “per.items”). Separate partitions of data are again used for
 regularization and prediction. Domain-based results are printed for
 comparison.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>D_items_out<span class="ot">&lt;-</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">D_regularized</span>(<span class="at">data=</span>US.dat,</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">mv.vars=</span>per.items,</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.var=</span><span class="st">&quot;gender.cat&quot;</span>,</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">out =</span> T,</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">size=</span>size,<span class="at">pcc =</span> T,<span class="at">auc =</span> T,<span class="at">pred.prob =</span> T)</span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Item-based D</span></span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(D_items_out<span class="sc">$</span>D,<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>D_items_out<span class="ot">&lt;-</span></span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>  <span class="fu">D_regularized</span>(<span class="at">data=</span>US.dat,</span>
+<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a>                <span class="at">mv.vars=</span>per.items,</span>
+<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a>              <span class="at">group.var=</span><span class="st">&quot;gender.cat&quot;</span>,</span>
+<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a>              <span class="at">group.values =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>,<span class="st">&quot;Female&quot;</span>),</span>
+<span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a>              <span class="at">out =</span> T,</span>
+<span id="cb35-7"><a href="#cb35-7" tabindex="-1"></a>              <span class="at">size=</span>size,<span class="at">pcc =</span> T,<span class="at">auc =</span> T,<span class="at">pred.prob =</span> T)</span>
+<span id="cb35-8"><a href="#cb35-8" tabindex="-1"></a></span>
+<span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a><span class="co"># Item-based D</span></span>
+<span id="cb35-10"><a href="#cb35-10" tabindex="-1"></a><span class="fu">round</span>(D_items_out<span class="sc">$</span>D,<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>#&gt;      n.Male n.Female m.Male m.Female sd.Male sd.Female pooled.sd diff    D
 #&gt; [1,]   1473     4267   0.46     -0.4     0.9      0.86      0.87 0.86 0.99
 #&gt;      pcc.Male pcc.Female pcc.total  auc
 #&gt; [1,]      0.7       0.69      0.69 0.76</code></pre>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Big Five domain-based D</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(D_out<span class="sc">$</span>D,<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="co"># Big Five domain-based D</span></span>
+<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a><span class="fu">round</span>(D_out<span class="sc">$</span>D,<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>#&gt;      n.Male n.Female m.Male m.Female sd.Male sd.Female pooled.sd diff    D
 #&gt; [1,]   1473     4267   0.34     -0.3    0.86      0.79      0.81 0.64 0.79
 #&gt;      pcc.Male pcc.Female pcc.total  auc
@@ -873,12 +873,12 @@ comparison.</p>
 larger than with Big Five trait domains, <em>D</em> = 0.79.</p>
 <p>Differences in predictive performance can also be illustrated from
 comparing the predicted probabilities.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span>D_items_out<span class="sc">$</span>P.table,<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span>D_items_out<span class="sc">$</span>P.table,<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>#&gt;         
 #&gt;          [0,0.2) [0.2,0.4) [0.4,0.6) [0.6,0.8) [0.8,1]
 #&gt;   Female    11.6      38.5      33.4      14.3     2.2
 #&gt;   Male       1.6      15.1      32.9      35.4    15.0</code></pre>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span>D_out<span class="sc">$</span>P.table,<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span>D_out<span class="sc">$</span>P.table,<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>#&gt;         
 #&gt;          [0,0.2) [0.2,0.4) [0.4,0.6) [0.6,0.8) [0.8,1]
 #&gt;   Female     7.2      39.0      37.0      14.1     2.7
@@ -892,39 +892,39 @@ rather indifferent in regards to sex.</p>
 <div id="overlap-1" class="section level4">
 <h4>Overlap</h4>
 <p>Overlaps give similar information but in another format:</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the D-estimate</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>D_items<span class="ot">&lt;-</span><span class="fu">unname</span>(D_items_out<span class="sc">$</span>D[,<span class="st">&quot;D&quot;</span>])</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Overlap relative to a single distribution (OVL)</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>OVL_items<span class="ot">&lt;-</span><span class="dv">2</span><span class="sc">*</span><span class="fu">pnorm</span>((<span class="sc">-</span>D_items<span class="sc">/</span><span class="dv">2</span>))</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Proportion of overlap relative to the joint distribution</span></span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>OVL2_items<span class="ot">&lt;-</span>OVL_items<span class="sc">/</span>(<span class="dv">2</span><span class="sc">-</span>OVL_items)</span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a><span class="co"># non-parametric overlap</span></span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>np.overlap_items<span class="ot">&lt;-</span></span>
-<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">overlap</span>(<span class="at">x =</span> <span class="fu">list</span>(D_items_out<span class="sc">$</span>pred.dat[</span>
-<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  D_items_out<span class="sc">$</span>pred.dat<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Male&quot;</span>,<span class="st">&quot;pred&quot;</span>],</span>
-<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>  D_items_out<span class="sc">$</span>pred.dat[</span>
-<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>  D_items_out<span class="sc">$</span>pred.dat<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Female&quot;</span>,<span class="st">&quot;pred&quot;</span>]),</span>
-<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot=</span>T)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a><span class="co"># Obtain the D-estimate</span></span>
+<span id="cb43-2"><a href="#cb43-2" tabindex="-1"></a>D_items<span class="ot">&lt;-</span><span class="fu">unname</span>(D_items_out<span class="sc">$</span>D[,<span class="st">&quot;D&quot;</span>])</span>
+<span id="cb43-3"><a href="#cb43-3" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" tabindex="-1"></a><span class="co"># Overlap relative to a single distribution (OVL)</span></span>
+<span id="cb43-5"><a href="#cb43-5" tabindex="-1"></a>OVL_items<span class="ot">&lt;-</span><span class="dv">2</span><span class="sc">*</span><span class="fu">pnorm</span>((<span class="sc">-</span>D_items<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb43-6"><a href="#cb43-6" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" tabindex="-1"></a><span class="co"># Proportion of overlap relative to the joint distribution</span></span>
+<span id="cb43-8"><a href="#cb43-8" tabindex="-1"></a>OVL2_items<span class="ot">&lt;-</span>OVL_items<span class="sc">/</span>(<span class="dv">2</span><span class="sc">-</span>OVL_items)</span>
+<span id="cb43-9"><a href="#cb43-9" tabindex="-1"></a></span>
+<span id="cb43-10"><a href="#cb43-10" tabindex="-1"></a><span class="co"># non-parametric overlap</span></span>
+<span id="cb43-11"><a href="#cb43-11" tabindex="-1"></a></span>
+<span id="cb43-12"><a href="#cb43-12" tabindex="-1"></a>np.overlap_items<span class="ot">&lt;-</span></span>
+<span id="cb43-13"><a href="#cb43-13" tabindex="-1"></a>  <span class="fu">overlap</span>(<span class="at">x =</span> <span class="fu">list</span>(D_items_out<span class="sc">$</span>pred.dat[</span>
+<span id="cb43-14"><a href="#cb43-14" tabindex="-1"></a>  D_items_out<span class="sc">$</span>pred.dat<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Male&quot;</span>,<span class="st">&quot;pred&quot;</span>],</span>
+<span id="cb43-15"><a href="#cb43-15" tabindex="-1"></a>  D_items_out<span class="sc">$</span>pred.dat[</span>
+<span id="cb43-16"><a href="#cb43-16" tabindex="-1"></a>  D_items_out<span class="sc">$</span>pred.dat<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Female&quot;</span>,<span class="st">&quot;pred&quot;</span>]),</span>
+<span id="cb43-17"><a href="#cb43-17" tabindex="-1"></a>  <span class="at">plot=</span>T)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this corresponds to Proportion of overlap relative to the joint distribution (OVL2)</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>np.OVL2_items<span class="ot">&lt;-</span><span class="fu">unname</span>(np.overlap_items<span class="sc">$</span>OV)</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># from which Proportion of overlap relative to a single distribution (OVL) is approximated at</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>np.OVL_items<span class="ot">&lt;-</span>(<span class="dv">2</span><span class="sc">*</span>np.OVL2_items)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span>np.OVL2_items)</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># compare the different overlap-estimates</span></span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(OVL_items,np.OVL_items,</span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>            OVL2_items,np.OVL2_items),<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a><span class="co"># this corresponds to Proportion of overlap relative to the joint distribution (OVL2)</span></span>
+<span id="cb44-2"><a href="#cb44-2" tabindex="-1"></a>np.OVL2_items<span class="ot">&lt;-</span><span class="fu">unname</span>(np.overlap_items<span class="sc">$</span>OV)</span>
+<span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" tabindex="-1"></a><span class="co"># from which Proportion of overlap relative to a single distribution (OVL) is approximated at</span></span>
+<span id="cb44-5"><a href="#cb44-5" tabindex="-1"></a>np.OVL_items<span class="ot">&lt;-</span>(<span class="dv">2</span><span class="sc">*</span>np.OVL2_items)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span>np.OVL2_items)</span>
+<span id="cb44-6"><a href="#cb44-6" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" tabindex="-1"></a><span class="co"># compare the different overlap-estimates</span></span>
+<span id="cb44-8"><a href="#cb44-8" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="#cb44-9" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(OVL_items,np.OVL_items,</span>
+<span id="cb44-10"><a href="#cb44-10" tabindex="-1"></a>            OVL2_items,np.OVL2_items),<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>#&gt;      OVL_items np.OVL_items OVL2_items np.OVL2_items
 #&gt; [1,]      0.62         0.77       0.45          0.63</code></pre>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print Big Five domain based overlaps for comparison</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(OVL,np.OVL,OVL2,np.OVL2),<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a><span class="co"># print Big Five domain based overlaps for comparison</span></span>
+<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(OVL,np.OVL,OVL2,np.OVL2),<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>#&gt;       OVL np.OVL OVL2 np.OVL2
 #&gt; [1,] 0.69   0.82 0.53     0.7</code></pre>
 <p>The overlap between FM-distributions of males and females is somewhat
@@ -967,8 +967,8 @@ accurate predictions. <em>European Journal of Personality, 32</em>(3),
 </div>
 <div id="session-information" class="section level1">
 <h1>Session Information</h1>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
-<pre><code>#&gt; R version 4.3.0 (2023-04-21 ucrt)
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<pre><code>#&gt; R version 4.3.2 (2023-10-31 ucrt)
 #&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)
 #&gt; Running under: Windows 10 x64 (build 19045)
 #&gt; 
@@ -987,26 +987,26 @@ accurate predictions. <em>European Journal of Personality, 32</em>(3),
 #&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     
 #&gt; 
 #&gt; other attached packages:
-#&gt; [1] overlapping_2.1 testthat_3.1.8  ggplot2_3.4.2   dplyr_1.1.2    
-#&gt; [5] multid_0.8.0    rio_0.5.29     
+#&gt; [1] overlapping_2.1 testthat_3.2.1  ggplot2_3.4.4   dplyr_1.1.4    
+#&gt; [5] multid_0.9.0    rio_0.5.29     
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
-#&gt;  [1] sass_0.4.6        utf8_1.2.3        generics_0.1.3    shape_1.4.6      
-#&gt;  [5] lattice_0.21-8    stringi_1.7.12    pROC_1.18.2       hms_1.1.3        
-#&gt;  [9] digest_0.6.31     magrittr_2.0.3    evaluate_0.21     grid_4.3.0       
-#&gt; [13] iterators_1.0.14  fastmap_1.1.1     plyr_1.8.8        foreach_1.5.2    
-#&gt; [17] Matrix_1.5-4      glmnet_4.1-7      cellranger_1.1.0  jsonlite_1.8.4   
-#&gt; [21] zip_2.3.0         brio_1.1.3        survival_3.5-5    fansi_1.0.4      
-#&gt; [25] scales_1.2.1      codetools_0.2-19  jquerylib_0.1.4   cli_3.6.1        
-#&gt; [29] rlang_1.1.1       splines_4.3.0     munsell_0.5.0     withr_2.5.0      
-#&gt; [33] cachem_1.0.8      yaml_2.3.7        tools_4.3.0       colorspace_2.1-0 
-#&gt; [37] forcats_1.0.0     curl_5.0.0        vctrs_0.6.2       R6_2.5.1         
-#&gt; [41] lifecycle_1.0.3   foreign_0.8-84    pkgconfig_2.0.3   pillar_1.9.0     
-#&gt; [45] bslib_0.4.2       openxlsx_4.2.5.2  gtable_0.3.3      data.table_1.14.8
-#&gt; [49] glue_1.6.2        Rcpp_1.0.10       highr_0.10        haven_2.5.2      
-#&gt; [53] xfun_0.39         tibble_3.2.1      tidyselect_1.2.0  rstudioapi_0.14  
-#&gt; [57] knitr_1.42        farver_2.1.1      htmltools_0.5.5   labeling_0.4.2   
-#&gt; [61] rmarkdown_2.21    compiler_4.3.0    readxl_1.4.2</code></pre>
+#&gt;  [1] sass_0.4.7        utf8_1.2.4        generics_0.1.3    shape_1.4.6      
+#&gt;  [5] lattice_0.21-9    stringi_1.7.12    pROC_1.18.5       hms_1.1.3        
+#&gt;  [9] digest_0.6.34     magrittr_2.0.3    evaluate_0.23     grid_4.3.2       
+#&gt; [13] iterators_1.0.14  fastmap_1.1.1     plyr_1.8.9        foreach_1.5.2    
+#&gt; [17] Matrix_1.6-5      glmnet_4.1-8      cellranger_1.1.0  jsonlite_1.8.8   
+#&gt; [21] zip_2.3.0         brio_1.1.4        survival_3.5-7    fansi_1.0.6      
+#&gt; [25] scales_1.3.0      codetools_0.2-19  jquerylib_0.1.4   cli_3.6.2        
+#&gt; [29] rlang_1.1.3       splines_4.3.2     munsell_0.5.0     withr_2.5.2      
+#&gt; [33] cachem_1.0.8      yaml_2.3.7        tools_4.3.2       colorspace_2.1-0 
+#&gt; [37] forcats_1.0.0     curl_5.0.2        vctrs_0.6.5       R6_2.5.1         
+#&gt; [41] lifecycle_1.0.4   foreign_0.8-85    pkgconfig_2.0.3   pillar_1.9.0     
+#&gt; [45] bslib_0.5.1       openxlsx_4.2.5.2  gtable_0.3.4      data.table_1.14.8
+#&gt; [49] glue_1.7.0        Rcpp_1.0.12       haven_2.5.2       xfun_0.39        
+#&gt; [53] tibble_3.2.1      tidyselect_1.2.0  rstudioapi_0.15.0 knitr_1.44       
+#&gt; [57] farver_2.1.1      htmltools_0.5.5   labeling_0.4.3    rmarkdown_2.25   
+#&gt; [61] compiler_4.3.2    readxl_1.4.2</code></pre>
 </div>
 
 

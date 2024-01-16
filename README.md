@@ -45,10 +45,12 @@ Studies in which these methods have been used:
     Journal of Personality, 37*,
     313-337.](https://doi.org/10.1177/08902070221088155)
 
-*multid* also includes a function for testing several hypothesis that
+*multid* also includes a function for testing several hypotheses that
 are typically compressed to correlation between predictor (x) and an
 algebraic difference score (y1-y2) by deconstructing this difference
-score correlation (**ddsc_sem**).
+score correlation. Deconstructing difference score correlations can be
+applied with structural path models (**ddsc_sem**) and multi-level
+models (**ddsc_ml**).
 
 In addition, *multid* includes various helper functions:
 

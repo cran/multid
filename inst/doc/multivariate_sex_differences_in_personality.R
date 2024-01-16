@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = FALSE,
   comment = "#>"
@@ -6,10 +6,10 @@ knitr::opts_chunk$set(
 
 options(rmarkdown.html_vignette.check_title = FALSE)
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  install.packages("multid")
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  install.packages("devtools")
 #  devtools::install_github("vjilmari/multid")
 
@@ -167,7 +167,7 @@ coefficients(D_out$cv.mod,
 
 plot(D_out$cv.mod)
 
-## ---- fig.height=4, fig.width=8-----------------------------------------------
+## ----fig.height=4, fig.width=8------------------------------------------------
 
 # Obtain the D-estimate
 D<-unname(D_out$D[,"D"])
@@ -272,7 +272,7 @@ round(D_out$D,2)
 round(100*D_items_out$P.table,1)
 round(100*D_out$P.table,1)
 
-## ---- fig.height=4, fig.width=8-----------------------------------------------
+## ----fig.height=4, fig.width=8------------------------------------------------
 
 # Obtain the D-estimate
 D_items<-unname(D_items_out$D[,"D"])

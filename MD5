@@ -1,6 +1,6 @@
-c5785454b911ff9a2b381edd6c26b111 *DESCRIPTION
-72ccc5fc8aba7d48917f33e80cb7d209 *NAMESPACE
-256edead9ca63e72c7d7f9bb6fcb89bc *NEWS.md
+5d5a668a39136dca6dfb421bba7a040c *DESCRIPTION
+d468a6f6a454b1061007067d788e0629 *NAMESPACE
+dd5f0929f8e904e296ee677be624af0d *NEWS.md
 4389b5f52c88b18f1d40727cc9ad6696 *R/D_regularized.R
 390906b2d49e5df93e1c8ac2f0d8467d *R/D_regularized_fold.R
 ac669ae1bd5b6cebe663f4a2d004036f *R/D_regularized_fold_out.R
@@ -10,7 +10,8 @@ f589f9b11481ac588be9d20e3f297e6e *R/colwise_pool.R
 00b21b69ce2c47d67dfe3059cd94da89 *R/cvv.R
 f530e18abae1dfeecf716027cc168b26 *R/cvv_manual.R
 37fc62916dc170bfde5211d52b11ed19 *R/d_pooled_sd.R
-c5f6cf3079a290987bc72ae8efdfc3b9 *R/ddsc_sem.R
+cfbf2f766a12469abeeba2f55470f052 *R/ddsc_ml.R
+0a977fddda69dbeeeb35486a3aa1d14d *R/ddsc_sem.R
 8e80e929e8ab2765ce62118572832881 *R/diff_two_dep_cors.R
 2516a7d476d6fce7b6c21bf7a497bd14 *R/globals.R
 cb617a3a48e3eca380ce2aa75c23218a *R/ml_dadas.R
@@ -20,12 +21,12 @@ c07ac370e249a1f3244788c6abadf439 *R/reliability_dms.R
 0c6fc5107f8b11fb1b1639a4e503f92c *R/sem_dadas.R
 75647ccaae7ce7e3215ef7d38347266c *R/value_correlation.R
 19271dddc58b9b6cf18cdef3a8c3d671 *R/vpc_at.R
-8c69dc0297507d2d7e157e5f4ddd2734 *README.md
-08350e409bbfaf388cdda15773d0bf8c *build/vignette.rds
+6f3e1778a66a658117fcbdf26cc91a2e *README.md
+487ea01cd3346c78e20d77611e2a9150 *build/vignette.rds
 a065728d8dedc011ac7da61c776e6f08 *inst/CITATION
-e32047e91d15e6c9dbb9ba21807d27c5 *inst/doc/multivariate_sex_differences_in_personality.R
+b0bd468d19511da230bea3d5556aaec0 *inst/doc/multivariate_sex_differences_in_personality.R
 58b2f78b65219e2b8e565dc6387369e1 *inst/doc/multivariate_sex_differences_in_personality.Rmd
-a0954d88bd182d9aff9ac020bb923cc9 *inst/doc/multivariate_sex_differences_in_personality.html
+d960b6e304b6f880f0e7e381189e6d6b *inst/doc/multivariate_sex_differences_in_personality.html
 5d1afd3a52c2c193f5e5987e5da64f58 *man/D_regularized.Rd
 7bbb5e747ea5e89e46839e2c7cf25b3b *man/D_regularized_fold.Rd
 869c7da47fc3dfb678851075e910e60c *man/D_regularized_fold_out.Rd
@@ -35,6 +36,7 @@ a0954d88bd182d9aff9ac020bb923cc9 *inst/doc/multivariate_sex_differences_in_perso
 0361e3b2c977890d58c0a23b9b7dab97 *man/cvv.Rd
 fe24ac5de54378cf09f525bfa6425b9f *man/cvv_manual.Rd
 38a1bc655411c7dc396be303bcc4de55 *man/d_pooled_sd.Rd
+bf42433b5c98155d5fa19bd81dbbc843 *man/ddsc_ml.Rd
 788bdf5e7032308c0507bb266e17c646 *man/ddsc_sem.Rd
 cfdcf911414762978ec8771ca03468a5 *man/diff_two_dep_cors.Rd
 1faf7fcd253f248897a94aef639f21ea *man/figures/README-unnamed-chunk-4-1.png

@@ -322,12 +322,12 @@ ddsc_sem <- function(data,
   # variance test in a separate model
 
   var_model <- paste0(
-    paste0(y1_scaled, "~~cov_12*", y2_scaled), "\n",
-    paste0(y1_scaled, "~~var_1*", y1_scaled), "\n",
-    paste0(y2_scaled, "~~var_2*", y2_scaled), "\n",
-    paste0("var_diff:=var_1-var_2"), "\n",
-    paste0("var_ratio:=var_1/var_2"), "\n",
-    paste0("cor_12:=cov_12/(sqrt(var_1)*sqrt(var_2))")
+    paste0(y1_scaled, "~~cov_y1y2*", y2_scaled), "\n",
+    paste0(y1_scaled, "~~var_y1*", y1_scaled), "\n",
+    paste0(y2_scaled, "~~var_y2*", y2_scaled), "\n",
+    paste0("var_diff:=var_y1-var_y2"), "\n",
+    paste0("var_ratio:=var_y1/var_y2"), "\n",
+    paste0("cor_y1y2:=cov_y1y2/(sqrt(var_y1)*sqrt(var_y2))")
   )
 
   var_fit <-
