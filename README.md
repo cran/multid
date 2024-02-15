@@ -554,28 +554,36 @@ d <- data.frame(
  var2 = rnorm(50),
  x = rnorm(50)
 )
-round(sem_dadas(
-   data = d, var1 = "var1", var2 = "var2",
-   predictor = "x", center = TRUE, scale = TRUE
+round(ddsc_sem(
+   data = d, y1 = "var1", y2 = "var2",
+   x = "x", 
  )$results,3)
-#>                               est    se      z pvalue ci.lower ci.upper
-#> b_11                        0.107 0.143  0.747  0.455   -0.174    0.388
-#> b_21                       -0.078 0.110 -0.710  0.477   -0.294    0.138
-#> b_10                       -0.031 0.151 -0.205  0.837   -0.327    0.265
-#> b_20                        0.031 0.127  0.244  0.807   -0.218    0.280
-#> rescov_12                  -0.153 0.140 -1.096  0.273   -0.428    0.121
-#> coef_diff                   0.185 0.196  0.943  0.346   -0.200    0.570
-#> coef_diff_std               0.120 0.125  0.960  0.337   -0.125    0.365
-#> std_coef_diff               0.183 0.189  0.967  0.334   -0.188    0.554
-#> turning_point               0.334 1.158  0.288  0.773   -1.936    2.604
-#> coef_sum                    0.029 0.163  0.176  0.860   -0.291    0.349
-#> main_effect                 0.014 0.082  0.176  0.860   -0.146    0.175
-#> interaction_vs_main_effect  0.171 0.192  0.890  0.374   -0.206    0.547
-#> diff_abs_magnitude          0.029 0.163  0.176  0.860   -0.291    0.349
-#> abs_coef_diff               0.185 0.196  0.943  0.173   -0.200    0.570
-#> abs_coef_sum                0.029 0.163  0.176  0.430   -0.291    0.349
-#> dadas                       0.157 0.220  0.710  0.239   -0.275    0.588
-#> abs_coef_diff_test          0.185 0.196  0.943  0.173   -0.200    0.570
+#>                                    est    se      z pvalue ci.lower ci.upper
+#> r_xy1_y2                         0.121 0.140  0.865  0.387   -0.154    0.397
+#> r_xy1                            0.099 0.141  0.703  0.482   -0.177    0.375
+#> r_xy2                           -0.086 0.141 -0.610  0.542   -0.362    0.190
+#> b_11                             0.107 0.152  0.703  0.482   -0.192    0.406
+#> b_21                            -0.078 0.128 -0.610  0.542   -0.329    0.173
+#> b_10                            -0.076 0.151 -0.507  0.612   -0.372    0.219
+#> b_20                            -0.015 0.127 -0.115  0.909   -0.263    0.234
+#> res_cov_y1_y2                   -0.153 0.137 -1.120  0.263   -0.422    0.115
+#> diff_b10_b20                    -0.062 0.212 -0.292  0.770   -0.478    0.354
+#> diff_b11_b21                     0.185 0.214  0.865  0.387   -0.235    0.605
+#> diff_rxy1_rxy2                   0.185 0.215  0.862  0.389   -0.236    0.605
+#> q_b11_b21                        0.186 0.216  0.860  0.390   -0.238    0.610
+#> q_rxy1_rxy2                      0.185 0.216  0.857  0.391   -0.239    0.610
+#> cross_over_point                 0.334 1.208  0.276  0.782   -2.034    2.702
+#> sum_b11_b21                      0.029 0.183  0.158  0.875   -0.329    0.387
+#> main_effect                      0.014 0.091  0.158  0.875   -0.165    0.193
+#> interaction_vs_main_effect       0.171 0.218  0.784  0.433   -0.256    0.598
+#> diff_abs_b11_abs_b21             0.029 0.183  0.158  0.875   -0.329    0.387
+#> abs_diff_b11_b21                 0.185 0.214  0.865  0.194   -0.235    0.605
+#> abs_sum_b11_b21                  0.029 0.183  0.158  0.437   -0.329    0.387
+#> dadas                            0.157 0.256  0.610  0.271   -0.346    0.659
+#> q_r_equivalence                  0.185 0.216  0.857  0.804       NA       NA
+#> q_b_equivalence                  0.186 0.216  0.860  0.805       NA       NA
+#> cross_over_point_equivalence     0.334 1.208  0.276  0.609       NA       NA
+#> cross_over_point_minimal_effect  0.334 1.208  0.276  0.391       NA       NA
 
 # multilevel example
 
@@ -585,27 +593,69 @@ n2 <- 10 # observations per group
 
 dat <- data.frame(
   group = rep(c(LETTERS[1:n1]), each = n2),
-  x = sample(c(-0.5, 0.5), n1 * n2, replace = TRUE),
-  w = rep(sample(1:5, n1, replace = TRUE), each = n2),
+  w = sample(c(-0.5, 0.5), n1 * n2, replace = TRUE),
+  x = rep(sample(1:5, n1, replace = TRUE), each = n2),
   y = sample(1:5, n1 * n2, replace = TRUE)
 )
 library(lmerTest)
-fit <- lmerTest::lmer(y ~ x * w + (x | group),
+fit <- lmerTest::lmer(y ~ x * w + (w | group),
   data = dat
 )
 
-round(ml_dadas(fit,
-               predictor = "w",
-               diff_var = "x",
-               diff_var_values = c(0.5, -0.5))$dadas, 3)
-#>                     estimate    SE    df t.ratio p.value
-#> main_effect           -0.178 0.109 6.952  -1.630   0.147
-#> moderator_effect       1.039 0.733 7.204   1.417   0.198
-#> interaction           -0.202 0.228 7.071  -0.886   0.405
-#> -0.5                  -0.077 0.177 8.053  -0.435   0.675
-#> 0.5                   -0.279 0.136 9.326  -2.048   0.070
-#> abs_diff               0.202 0.228 7.071   0.886   0.202
-#> abs_sum                0.356 0.219 6.952   1.630   0.074
-#> dadas                 -0.154 0.354 8.053  -0.435   0.662
-#> interaction_vs_main    0.024 0.277 8.196   0.087   0.933
+round(ddsc_ml(fit,
+               predictor = "x",
+               moderator = "w",
+               moderator_values = c(0.5, -0.5))$results, 3)
+#>                            estimate    SE    df t.ratio p.value ci.lower
+#> r_xy1y2                      -0.229 0.258 7.071  -0.886   0.405   -0.838
+#> w_11                         -0.279 0.136 9.326  -2.048   0.070   -0.586
+#> w_21                         -0.077 0.177 8.053  -0.435   0.675   -0.485
+#> r_xy1                        -0.453 0.221 9.326  -2.048   0.070   -0.952
+#> r_xy2                        -0.113 0.260 8.053  -0.435   0.675   -0.713
+#> b_11                         -0.431 0.211 9.326  -2.048   0.070   -0.905
+#> b_21                         -0.119 0.273 8.053  -0.435   0.675   -0.748
+#> main_effect                  -0.178 0.109 6.952  -1.630   0.147   -0.437
+#> moderator_effect              1.039 0.733 7.204   1.417   0.198   -0.685
+#> interaction                  -0.202 0.228 7.071  -0.886   0.405   -0.741
+#> q_b11_b21                    -0.342    NA    NA      NA      NA       NA
+#> q_rxy1_rxy2                  -0.375    NA    NA      NA      NA       NA
+#> cross_over_point              5.134    NA    NA      NA      NA       NA
+#> interaction_vs_main           0.024 0.277 8.196   0.087   0.933   -0.613
+#> interaction_vs_main_bscale    0.037 0.428 8.196   0.087   0.933   -0.945
+#> interaction_vs_main_rscale    0.057 0.411 8.157   0.138   0.893   -0.888
+#> dadas                        -0.154 0.354 8.053  -0.435   0.662   -0.970
+#> dadas_bscale                 -0.238 0.547 8.053  -0.435   0.662   -1.497
+#> dadas_rscale                 -0.227 0.521 8.053  -0.435   0.662   -1.426
+#> abs_diff                      0.202 0.228 7.071   0.886   0.202   -0.337
+#> abs_sum                       0.356 0.219 6.952   1.630   0.074   -0.161
+#> abs_diff_bscale               0.312 0.352 7.071   0.886   0.202   -0.519
+#> abs_sum_bscale                0.550 0.337 6.952   1.630   0.074   -0.249
+#> abs_diff_rscale               0.340 0.349 6.956   0.973   0.181   -0.487
+#> abs_sum_rscale                0.567 0.334 7.065   1.696   0.067   -0.222
+#>                            ci.upper
+#> r_xy1y2                       0.381
+#> w_11                          0.028
+#> w_21                          0.331
+#> r_xy1                         0.045
+#> r_xy2                         0.487
+#> b_11                          0.043
+#> b_21                          0.511
+#> main_effect                   0.081
+#> moderator_effect              2.763
+#> interaction                   0.337
+#> q_b11_b21                        NA
+#> q_rxy1_rxy2                      NA
+#> cross_over_point                 NA
+#> interaction_vs_main           0.661
+#> interaction_vs_main_bscale    1.020
+#> interaction_vs_main_rscale    1.001
+#> dadas                         0.662
+#> dadas_bscale                  1.021
+#> dadas_rscale                  0.973
+#> abs_diff                      0.741
+#> abs_sum                       0.874
+#> abs_diff_bscale               1.144
+#> abs_sum_bscale                1.349
+#> abs_diff_rscale               1.167
+#> abs_sum_rscale                1.355
 ```

@@ -1,3 +1,13 @@
+# multid 1.0.0
+
+* Added a possibility to run ddsc_ml with just two observations per upper-level unit
+* Added a possibility to obtain bootstrap estimates and percentile confidence intervals for non-scaled parameter estimates in ddsc_ml results-table
+* Added confidence intervals for ddsc_ml results table
+* Added a possibility to bootstrap in ddsc_sem
+* ml_dadas and sem_dadas deprecated (superceded by ddsc_ml and ddsc_sem)
+* Added plot_ddsc function for directly plotting ddsc_sem results
+* Removed ml_dadas and sem_dadas from README examples. Replaced with ddsc_ml and ddsc_sem
+
 # multid 0.9.0
 
 * Renamed variance_test output in ddsc_sem

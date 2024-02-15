@@ -56,6 +56,7 @@ ml_dadas <- function(model,
                      level = .95,
                      seed = NULL,
                      abs_diff_test = 0) {
+  .Deprecated("ddsc_ml")
 
   # reorder diff_var_values
   diff_var_values <-

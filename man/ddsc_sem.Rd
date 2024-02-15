@@ -15,7 +15,10 @@ ddsc_sem(
   level = 0.95,
   sampling.weights = NULL,
   q_sesoi = 0,
-  min_cross_over_point_location = 0
+  min_cross_over_point_location = 0,
+  boot_ci = FALSE,
+  boot_n = 5000,
+  boot_ci_type = "perc"
 )
 }
 \arguments{
@@ -40,6 +43,12 @@ ddsc_sem(
 \item{q_sesoi}{Numeric. The smallest effect size of interest for Cohen's q estimates (Default 0; See Lakens et al. 2018).}
 
 \item{min_cross_over_point_location}{Numeric. Z-score for the minimal slope cross-over point of interest (Default 0).}
+
+\item{boot_ci}{Logical. Calculate confidence intervals based on bootstrap (Default FALSE).}
+
+\item{boot_n}{Numeric. How many bootstrap redraws (Default 5000).}
+
+\item{boot_ci_type}{If bootstrapping was used, the type of interval required. The value should be one of "norm", "basic", "perc" (default), or "bca.simple".}
 }
 \value{
 \item{descriptives}{Means, standard deviations, and intercorrelations.}
@@ -49,7 +58,9 @@ ddsc_sem(
 \item{results}{Summary of key results.}
 }
 \description{
-Deconstructing difference score correlation with structural equation modeling
+Deconstructs a bivariate association between x and a difference score y1-y2 with SEM.
+A difference score correlation is indicative that slopes for y1 as function of x and y2 as function of x are non-parallel.
+Deconstructing the bivariate association to these slopes allows for understanding the pattern and magnitude of this non-parallelism.
 }
 \examples{
 \dontrun{

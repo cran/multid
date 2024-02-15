@@ -9,10 +9,11 @@
 #' @export
 #'
 #' @examples
-#' D_out <- D_regularized_out(
+#' D_out <- D_regularized(
 #'   data = iris[iris$Species == "versicolor" | iris$Species == "virginica", ],
 #'   mv.vars = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
 #'   group.var = "Species", group.values = c("versicolor", "virginica"),
+#'   out = TRUE,
 #'   size = 15
 #' )
 #'

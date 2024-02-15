@@ -48,7 +48,7 @@ D_regularized(
 
 \item{size}{Integer. Number of cases in regularization data per each group. Default 1/4 of cases.}
 
-\item{fold}{Logical. Is regularization applied across sample folds with separate predictions for each fold? (Default FALSE)}
+\item{fold}{Logical. Is regularization applied across sample folds with separate predictions for each fold? (Default FALSE, see details)}
 
 \item{fold.var}{Character string. Name of the fold variable. (default NULL)}
 
@@ -70,6 +70,18 @@ D_regularized(
 }
 \description{
 Multivariate group difference estimation with regularized binomial regression
+}
+\details{
+\code{fold = TRUE} will apply manually defined data folds (supplied with fold.var) for regularization
+and obtain estimates for each separately. This can be a good solution, for example, when the data are clustered
+within countries. In such case, the cross-validation procedure is applied across countries.
+
+\code{out = TRUE} will use separate data partition for regularization and estimation. That is, the first
+cross-validation procedure is applied within the regularization set and the weights obtained are
+then used in the estimation data partition. The size of regularization set is defined with \code{size}.
+When used with \code{fold = TRUE}, size means size within a fold."
+
+For more details on these options, please refer to the \href{https://CRAN.R-project.org/package=multid/vignettes/multivariate_sex_differences_in_personality.html}{vignette} and \href{https://CRAN.R-project.org/package=multid/readme/README.html}{README} of the multid package.
 }
 \examples{
 D_regularized(
@@ -125,9 +137,9 @@ D_regularized(
 )$D
 }
 \references{
-Lönnqvist, J. E., & Ilmarinen, V. J. (2021). Using a continuous measure of genderedness to assess sex differences in the attitudes of the political elite. Political Behavior, 43, 1779–1800. https://doi.org/10.1007/s11109-021-09681-2
+Lönnqvist, J. E., & Ilmarinen, V. J. (2021). Using a continuous measure of genderedness to assess sex differences in the attitudes of the political elite. Political Behavior, 43, 1779–1800. \doi{https://doi.org/10.1007/s11109-021-09681-2}
 
-Ilmarinen, V. J., Vainikainen, M. P., & Lönnqvist, J. E. (2022). Is there a g-factor of genderedness? Using a continuous measure of genderedness to assess sex differences in personality, values, cognitive ability, school grades, and educational track. European Journal of Personality. https://doi.org/10.1177/08902070221088155
+Ilmarinen, V. J., Vainikainen, M. P., & Lönnqvist, J. E. (2023). Is there a g-factor of genderedness? Using a continuous measure of genderedness to assess sex differences in personality, values, cognitive ability, school grades, and educational track. European Journal of Personality, 37, 313-337. \doi{https://doi.org/10.1177/08902070221088155}
 }
 \seealso{
 \code{\link[glmnet]{cv.glmnet}}

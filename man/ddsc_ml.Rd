@@ -14,6 +14,7 @@ ddsc_ml(
   lvl2_unit = NULL,
   re_cov_test = FALSE,
   var_boot_test = FALSE,
+  boot_slopes = FALSE,
   nsim = NULL,
   level = 0.95,
   seed = NULL,
@@ -40,6 +41,8 @@ ddsc_ml(
 
 \item{var_boot_test}{Logical. Compare variance by lower-level groups at the upper-level in a reduced model with bootstrap? (Default FALSE)}
 
+\item{boot_slopes}{Logical. Are bootstrap estimates and percentile confidence intervals obtained for the estimates presented in results? (Default FALSE)}
+
 \item{nsim}{Numeric. Number of bootstrap simulations.}
 
 \item{level}{Numeric. The confidence level required for the var_boot_test output (Default .95)}
@@ -62,7 +65,11 @@ ddsc_ml(
 \item{boot_var_diffs}{List of different variance bootstrap tests.}
 }
 \description{
+Deconstructs a bivariate association between x and a difference score y1-y2 with multi-level modeling approach.
+Within each upper-level unit (lvl2_unit) there can be multiple observations of y1 and y2.
 Can be used for either pre-fitted lmer-models or to long format data.
+A difference score correlation is indicative that slopes for y1 as function of x and y2 as function of x are non-parallel.
+Deconstructing the bivariate association to these slopes allows for understanding the pattern and magnitude of this non-parallelism.
 }
 \examples{
 \dontrun{

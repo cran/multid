@@ -12,7 +12,7 @@
 
 <meta name="author" content="Ville-Juhani Ilmarinen" />
 
-<meta name="date" content="2024-01-16" />
+<meta name="date" content="2024-02-15" />
 
 <title>Multivariate Sex Differences in Personality with Regularized Regression in multid -package</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Multivariate Sex Differences in Personality
 with Regularized Regression in multid -package</h1>
 <h4 class="author">Ville-Juhani Ilmarinen</h4>
-<h4 class="date">2024-01-16</h4>
+<h4 class="date">2024-02-15</h4>
 
 
 
@@ -780,7 +780,7 @@ for more accurate results.</p>
 <span id="cb29-24"><a href="#cb29-24" tabindex="-1"></a>}</span>
 <span id="cb29-25"><a href="#cb29-25" tabindex="-1"></a>t2<span class="ot">&lt;-</span><span class="fu">Sys.time</span>()</span>
 <span id="cb29-26"><a href="#cb29-26" tabindex="-1"></a>t2<span class="sc">-</span>t1</span></code></pre></div>
-<pre><code>#&gt; Time difference of 7.817892 secs</code></pre>
+<pre><code>#&gt; Time difference of 6.333763 secs</code></pre>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="co"># print 95% CI percentile interval</span></span>
 <span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a></span>
 <span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">quantile</span>(D_out_boot,<span class="fu">c</span>(.<span class="dv">025</span>,.<span class="dv">975</span>)),<span class="dv">2</span>)</span></code></pre></div>
@@ -988,17 +988,17 @@ accurate predictions. <em>European Journal of Personality, 32</em>(3),
 #&gt; 
 #&gt; other attached packages:
 #&gt; [1] overlapping_2.1 testthat_3.2.1  ggplot2_3.4.4   dplyr_1.1.4    
-#&gt; [5] multid_0.9.0    rio_0.5.29     
+#&gt; [5] multid_1.0.0    rio_0.5.29     
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
 #&gt;  [1] sass_0.4.7        utf8_1.2.4        generics_0.1.3    shape_1.4.6      
-#&gt;  [5] lattice_0.21-9    stringi_1.7.12    pROC_1.18.5       hms_1.1.3        
+#&gt;  [5] lattice_0.21-9    stringi_1.8.3     pROC_1.18.5       hms_1.1.3        
 #&gt;  [9] digest_0.6.34     magrittr_2.0.3    evaluate_0.23     grid_4.3.2       
 #&gt; [13] iterators_1.0.14  fastmap_1.1.1     plyr_1.8.9        foreach_1.5.2    
 #&gt; [17] Matrix_1.6-5      glmnet_4.1-8      cellranger_1.1.0  jsonlite_1.8.8   
 #&gt; [21] zip_2.3.0         brio_1.1.4        survival_3.5-7    fansi_1.0.6      
 #&gt; [25] scales_1.3.0      codetools_0.2-19  jquerylib_0.1.4   cli_3.6.2        
-#&gt; [29] rlang_1.1.3       splines_4.3.2     munsell_0.5.0     withr_2.5.2      
+#&gt; [29] rlang_1.1.3       splines_4.3.2     munsell_0.5.0     withr_3.0.0      
 #&gt; [33] cachem_1.0.8      yaml_2.3.7        tools_4.3.2       colorspace_2.1-0 
 #&gt; [37] forcats_1.0.0     curl_5.0.2        vctrs_0.6.5       R6_2.5.1         
 #&gt; [41] lifecycle_1.0.4   foreign_0.8-85    pkgconfig_2.0.3   pillar_1.9.0     

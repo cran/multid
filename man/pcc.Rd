@@ -22,10 +22,11 @@ Vector of length 2. Probabilities of correct classification.
 Returns probabilities of correct classification for both groups in independent data partition.
 }
 \examples{
-D_out <- D_regularized_out(
+D_out <- D_regularized(
   data = iris[iris$Species == "versicolor" | iris$Species == "virginica", ],
   mv.vars = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
   group.var = "Species", group.values = c("versicolor", "virginica"),
+  out = TRUE,
   size = 15
 )
 

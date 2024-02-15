@@ -1,5 +1,9 @@
 #' Deconstructing difference score correlation with structural equation modeling
 #'
+#' Deconstructs a bivariate association between x and a difference score y1-y2 with SEM.
+#' A difference score correlation is indicative that slopes for y1 as function of x and y2 as function of x are non-parallel.
+#' Deconstructing the bivariate association to these slopes allows for understanding the pattern and magnitude of this non-parallelism.
+#'
 #' @param data A data frame.
 #' @param y1 Character string. Variable name of first component score of difference score.
 #' @param y2 Character string. Variable name of second component score of difference score.
@@ -10,6 +14,9 @@
 #' @param level Numeric. The confidence level required for the result output (Default .95)
 #' @param sampling.weights Character string. Name of sampling weights variable.
 #' @param q_sesoi Numeric. The smallest effect size of interest for Cohen's q estimates (Default 0; See Lakens et al. 2018).
+#' @param boot_ci Logical. Calculate confidence intervals based on bootstrap (Default FALSE).
+#' @param boot_n Numeric. How many bootstrap redraws (Default 5000).
+#' @param boot_ci_type If bootstrapping was used, the type of interval required. The value should be one of "norm", "basic", "perc" (default), or "bca.simple".
 #' @param min_cross_over_point_location Numeric. Z-score for the minimal slope cross-over point of interest (Default 0).
 #'
 #' @return
@@ -48,7 +55,10 @@ ddsc_sem <- function(data,
                      level = .95,
                      sampling.weights = NULL,
                      q_sesoi = 0,
-                     min_cross_over_point_location = 0) {
+                     min_cross_over_point_location = 0,
+                     boot_ci = FALSE,
+                     boot_n = 5000,
+                     boot_ci_type = "perc") {
   if (center_yvars) {
     pooled_mean <-
       mean(c(mean(data[, y1]), mean(data[, y2])))
@@ -230,15 +240,27 @@ ddsc_sem <- function(data,
     )
   }
 
-  # fit model
+  # fit model (use boot if requested)
 
-  fit <-
-    lavaan::sem(
-      model = model,
-      data = data,
-      estimator = estimator,
-      sampling.weights = sampling.weights
-    )
+  if (boot_ci) {
+    fit <-
+      lavaan::sem(
+        model = model,
+        data = data,
+        estimator = estimator,
+        sampling.weights = sampling.weights,
+        se = "boot",
+        bootstrap = boot_n
+      )
+
+  } else {
+    fit <-
+      lavaan::sem(
+        model = model,
+        data = data,
+        estimator = estimator,
+        sampling.weights = sampling.weights)
+    }
 
   output.data <-
     data[, c(
@@ -246,10 +268,18 @@ ddsc_sem <- function(data,
       x, x_scaled, "diff_score", "diff_score_scaled"
     )]
 
-  pars <- data.frame(lavaan::parameterestimates(fit,
-    rsquare = TRUE,
-    level = level
-  ))
+  # obtain parameterestimates (check bootstrap)
+
+  if (boot_ci){
+    pars <- data.frame(lavaan::parameterestimates(fit,
+                                                  rsquare = TRUE,
+                                                  level = level,
+                                                  boot.ci.type = boot_ci_type))
+                       } else {
+    pars <- data.frame(lavaan::parameterestimates(fit,
+                                                  rsquare = TRUE,
+                                                  level = level))
+                       }
 
   # one-sided tests for absolute parameters
 
@@ -319,7 +349,7 @@ ddsc_sem <- function(data,
   results["cross_over_point_minimal_effect", "ci.lower"] <- NA
   results["cross_over_point_minimal_effect", "ci.upper"] <- NA
 
-  # variance test in a separate model
+  # variance test in a separate model (check for bootstrap)
 
   var_model <- paste0(
     paste0(y1_scaled, "~~cov_y1y2*", y2_scaled), "\n",
@@ -330,17 +360,35 @@ ddsc_sem <- function(data,
     paste0("cor_y1y2:=cov_y1y2/(sqrt(var_y1)*sqrt(var_y2))")
   )
 
-  var_fit <-
-    lavaan::sem(
-      model = var_model,
-      data = data,
-      estimator = estimator,
-      sampling.weights = sampling.weights
-    )
+  if (boot_ci) {
+    var_fit <-
+      lavaan::sem(
+        model = var_model,
+        data = data,
+        estimator = estimator,
+        sampling.weights = sampling.weights,
+        se = "boot",
+        bootstrap = boot_n
+      )
 
-  var_pars <- data.frame(lavaan::parameterestimates(var_fit,
-    level = level
-  ))
+    var_pars <- data.frame(lavaan::parameterestimates(var_fit,
+                                                      level = level,
+                                                      boot.ci.type = boot_ci_type
+    ))
+
+  } else {
+    var_fit <-
+      lavaan::sem(
+        model = var_model,
+        data = data,
+        estimator = estimator,
+        sampling.weights = sampling.weights
+      )
+
+    var_pars <- data.frame(lavaan::parameterestimates(var_fit,
+                                                      level = level
+    ))
+  }
 
   var_results <- var_pars[, 4:ncol(var_pars)]
   rownames(var_results) <- var_results$label

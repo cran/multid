@@ -49,6 +49,8 @@ sem_dadas <- function(data,
                       level = .95,
                       sampling.weights = NULL,
                       abs_coef_diff_test = 0) {
+  .Deprecated("ddsc_sem")
+
   if (center) {
     pooled_mean <-
       mean(c(mean(data[, var1]), mean(data[, var2])))
